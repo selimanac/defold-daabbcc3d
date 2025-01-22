@@ -17,7 +17,7 @@ local tests = {
 	}
 }
 
-local current_test = 1
+local current_test = 4
 
 local function show(self, proxy)
 	if self.current_proxy then
@@ -33,7 +33,7 @@ end
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.current_proxy = nil
-	show(self, tests[1].url)
+	show(self, tests[current_test].url)
 end
 
 function on_message(self, message_id, message, sender)

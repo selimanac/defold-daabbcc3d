@@ -1,4 +1,16 @@
 name: "query_aabb"
+instances {
+  id: "box"
+  prototype: "/example/components/gameobjects/box.go"
+  position {
+    x: -136.0
+  }
+  scale3 {
+    x: 2.0
+    y: 2.0
+    z: 2.0
+  }
+}
 collection_instances {
   id: "container"
   collection: "/example/components/collections/container.collection"

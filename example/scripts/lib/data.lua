@@ -7,8 +7,8 @@ local active_boxes     = {}
 local active_box_count = 0
 local box_factory      = "/container/factories#box"
 local BOX_SIZE         = {
-	SQUARE = { width = 40, height = 40 },
-	RECTANGLE = { width = 120, height = 60 },
+	SQUARE = { width = 2, height = 2, depth = 2 },
+	RECTANGLE = { width = 8, height = 4, depth = 2 },
 }
 
 data.BOX_TYPE          = {
@@ -16,7 +16,7 @@ data.BOX_TYPE          = {
 		size          = BOX_SIZE.SQUARE,
 		collision_bit = collision.collision_bits.ITEM,
 		anim          = "aabb_40x40",
-		sprite_url    = msg.url(),
+		model_url     = msg.url(),
 		label_url     = msg.url(),
 		id            = hash(""),
 		aabb_id       = 0,
@@ -28,7 +28,7 @@ data.BOX_TYPE          = {
 		size          = BOX_SIZE.SQUARE,
 		collision_bit = collision.collision_bits.ITEM,
 		anim          = "aabb_40x40",
-		sprite_url    = msg.url(),
+		model_url     = msg.url(),
 		label_url     = msg.url(),
 		id            = hash(""),
 		aabb_id       = 0,
@@ -40,7 +40,7 @@ data.BOX_TYPE          = {
 		size          = BOX_SIZE.SQUARE,
 		collision_bit = collision.collision_bits.ENEMY,
 		anim          = "enemy_40x40",
-		sprite_url    = msg.url(),
+		model_url     = msg.url(),
 		label_url     = msg.url(),
 		id            = hash(""),
 		aabb_id       = 0,
@@ -51,7 +51,7 @@ data.BOX_TYPE          = {
 		size          = BOX_SIZE.RECTANGLE,
 		collision_bit = collision.collision_bits.GROUND,
 		anim          = "ground_120x60",
-		sprite_url    = msg.url(),
+		model_url     = msg.url(),
 		label_url     = msg.url(),
 		id            = hash(""),
 		aabb_id       = 0,
@@ -62,7 +62,7 @@ data.BOX_TYPE          = {
 		size          = BOX_SIZE.SQUARE,
 		collision_bit = collision.collision_bits.PLAYER,
 		anim          = "player_40x40",
-		sprite_url    = msg.url(),
+		model_url     = msg.url(),
 		label_url     = msg.url(),
 		id            = hash(""),
 		aabb_id       = 0,
@@ -75,11 +75,14 @@ data.aabbs             = {}
 data.boxes             = {}
 
 local function setup_box(box, box_position)
-	box.position   = box_position
-	box.id         = factory.create(box_factory, box.position)
-	box.sprite_url = msg.url(nil, box.id, "sprite")
-	box.label_url  = msg.url(nil, box.id, "label")
-	sprite.play_flipbook(box.sprite_url, box.anim)
+	box.position                = box_position
+	box.id                      = factory.create(box_factory, box.position, nil, nil, vmath.vector3(2, 2, 2))
+
+	box.model_url               = msg.url(nil, box.id, "model")
+
+	local light_source_position = go.get_position("/container/light_source")
+	go.set(box.model_url, 'light', vmath.vector4(light_source_position.x, light_source_position.y, light_source_position.z, 1))
+
 
 	return box
 end
@@ -90,18 +93,18 @@ function data.add_box(box_position, box_type, box_static, animate)
 	local box = setup_box(utils.table_copy(box_type), box_position)
 
 	if box_static then
-		box.aabb_id = collision.insert_aabb(box.position.x, box.position.y, box.size.width, box.size.height, box.collision_bit)
+		box.aabb_id = collision.insert_aabb(box.position, box.size.width, box.size.height, box.size.depth, box.collision_bit)
 	else
-		box.aabb_id = collision.insert_gameobject(box.id, box.size.width, box.size.height, box.collision_bit)
+		box.aabb_id = collision.insert_gameobject(box.id, box.size.width, box.size.height, box.size.depth, box.collision_bit)
 	end
 
-	label.set_text(box.label_url, tostring(box.aabb_id))
+
 
 	table.insert(data.boxes, box)
 	table.insert(data.aabbs, box.aabb_id, #data.boxes)
 
 	if animate then
-		go.animate(box.id, "position.x", go.PLAYBACK_LOOP_PINGPONG, box.position.x + 100, go.EASING_INOUTELASTIC, 4)
+		go.animate(box.id, "position.z", go.PLAYBACK_LOOP_PINGPONG, box.position.z + 3, go.EASING_INOUTELASTIC, 4)
 	end
 end
 
@@ -113,8 +116,8 @@ local function clear_highlight(id)
 	local box_id = data.aabbs[id]
 	local box = data.boxes[box_id]
 	box.selected = false
-	go.cancel_animations(box.sprite_url, "tint.y")
-	go.set(box.sprite_url, "tint.y", 1)
+	go.cancel_animations(box.model_url, "tint.y")
+	go.set(box.model_url, "tint.y", 1)
 end
 
 function data.clear_highlights()
@@ -141,7 +144,9 @@ function data.highlight(result, count)
 
 		if not box.selected then
 			box.selected = true
-			go.animate(box.sprite_url, "tint.y", go.PLAYBACK_LOOP_PINGPONG, 0.5, go.EASING_LINEAR, 0.4)
+			print("tint")
+			pprint(box.model_url)
+			go.animate(box.model_url, "tint.y", go.PLAYBACK_LOOP_PINGPONG, 0.5, go.EASING_LINEAR, 0.4)
 			active_boxes[box.aabb_id] = box.aabb_id
 		end
 	end

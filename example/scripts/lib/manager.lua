@@ -4,10 +4,7 @@ local camera                     = require("example.scripts.lib.camera")
 local manager                    = {}
 local info_label_url             = msg.url(".")
 local collection_title_label_url = msg.url(".")
-local next_btn_url               = msg.url(".")
-local pointer_url                = msg.url(".")
-local next_btn_id                = 0
-local pointer_id                 = 0
+
 local info_string                = "0 - Reset / 1 - Sort: %s / 2 - Manifold: %s / 3 - Mask: %s"
 local KEYS                       = {
 	AABB_DEFAULT = hash("aabb_default"),
@@ -55,9 +52,6 @@ function manager.init(title_txt)
 	msg.post(".", "acquire_input_focus")
 	msg.post("@render:", "clear_color", { color = vmath.vector4(100 / 255, 100 / 255, 100 / 255, 0) })
 
-	pointer_url                         = msg.url(".")
-	pointer_url.path                    = "/container/pointer"
-
 	info_label_url                      = msg.url(".")
 	info_label_url.path                 = "/container/info"
 	info_label_url.fragment             = "label"
@@ -67,28 +61,18 @@ function manager.init(title_txt)
 	collection_title_label_url.fragment = "collection_txt"
 	label.set_text(collection_title_label_url, title_txt)
 
-	next_btn_url                 = msg.url(".")
-	next_btn_url.path            = "/container/next_btn"
-
-	local next_btn_sprite_url    = msg.url(".")
-	next_btn_sprite_url.path     = "/container/next_btn"
-	next_btn_sprite_url.fragment = "sprite"
-
-	local next_btn_position      = go.get_position(next_btn_url)
-	local next_btn_size          = go.get(next_btn_sprite_url, "size")
-
 	camera.init()
 	collision.init()
-
-	next_btn_id = collision.insert_aabb(next_btn_position.x, next_btn_position.y, next_btn_size.x, next_btn_size.y, collision.collision_bits.BUTTON)
-	pointer_id = collision.insert_gameobject(pointer_url, 5, 5, collision.collision_bits.POINTER)
 
 	set_info_text()
 end
 
+local planeNormal = vmath.vector3(0, 1, 0)
+local planePoint = vmath.vector3(0, 0, 0)
+
 function manager.input(action_id, action)
-	manager.world_position = camera.screen_to_world(action.x, action.y, 0)
-	go.set_position(manager.world_position, pointer_url)
+	--manager.world_position = camera.screen_to_world(action.x, action.y, 0)
+	manager.world_position = camera.screen_to_world_plane(action.x, action.y, planeNormal, planePoint)
 
 	if action_id == KEYS.AABB_DEFAULT and action.pressed then
 		toogle_default()
@@ -100,10 +84,9 @@ function manager.input(action_id, action)
 		toogle_mask()
 	end
 
-	local result, _ = collision.query_id_btn(pointer_id)
-	if result and action.pressed then
-		msg.post("load:/proxies#load", "next", {})
-	end
+	-- TODO ADD GUI
+
+	--msg.post("load:/proxies#load", "next", {})
 end
 
 function manager.final()

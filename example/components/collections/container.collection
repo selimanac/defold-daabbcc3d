@@ -2,17 +2,28 @@ name: "container"
 instances {
   id: "camera"
   prototype: "/example/components/gameobjects/camera.go"
+  component_properties {
+    id: "orbit_camera"
+    properties {
+      id: "distance"
+      value: "40.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "angle_x"
+      value: "-30.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "angle_y"
+      value: "45.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
 }
 instances {
   id: "info"
   prototype: "/example/components/gameobjects/info.go"
-}
-instances {
-  id: "next_btn"
-  prototype: "/example/components/gameobjects/next_btn.go"
-  position {
-    x: 410.0
-  }
 }
 instances {
   id: "pointer"
@@ -24,6 +35,23 @@ embedded_instances {
   data: "components {\n"
   "  id: \"box\"\n"
   "  component: \"/example/components/factories/box.factory\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "light_source"
+  data: ""
+  position {
+    x: -14.0
+    y: 10.0
+    z: 18.0
+  }
+}
+embedded_instances {
+  id: "gui"
+  data: "components {\n"
+  "  id: \"test\"\n"
+  "  component: \"/example/components/gui/test.gui\"\n"
   "}\n"
   ""
 }

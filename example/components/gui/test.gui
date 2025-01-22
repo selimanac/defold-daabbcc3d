@@ -1,0 +1,21 @@
+script: "/example/scripts/test.gui_script"
+textures {
+  name: "test"
+  texture: "/example/components/atlas/test.atlas"
+}
+nodes {
+  position {
+    x: 960.0
+    y: 321.0
+  }
+  type: TYPE_BOX
+  texture: "test/next_btn"
+  id: "next_btn"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_BOTTOM
+  pivot: PIVOT_E
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

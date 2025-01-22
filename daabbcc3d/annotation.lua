@@ -21,11 +21,11 @@ function daabbcc3d.new_group(rebuild_type) end
 function daabbcc3d.remove_group(group_id) end
 
 ---Insert AABB into the group.
----@param group_id integer roup ID
----@param position vector3  position of AABB.
+---@param group_id integer Group ID
+---@param position vector3  Position of AABB.
 ---@param width integer Width of AABB.
 ---@param height integer Height of AABB.
----@param depth integer depth of AABB.
+---@param depth integer Depth of AABB.
 ---@param category_bit? integer Single category bit which aabb belongs to. Default is **all**
 ---@return integer aabb_id New aabb ID
 function daabbcc3d.insert_aabb(group_id, position, width, height, depth, category_bit) end

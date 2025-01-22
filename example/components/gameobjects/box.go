@@ -1,26 +1,15 @@
 embedded_components {
-  id: "sprite"
-  type: "sprite"
-  data: "default_animation: \"player_40x40\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "textures {\n"
-  "  sampler: \"texture_sampler\"\n"
-  "  texture: \"/example/components/atlas/test.atlas\"\n"
+  id: "model"
+  type: "model"
+  data: "mesh: \"/builtins/assets/meshes/cube.dae\"\n"
+  "name: \"{{NAME}}\"\n"
+  "materials {\n"
+  "  name: \"default\"\n"
+  "  material: \"/builtins/materials/model.material\"\n"
+  "  textures {\n"
+  "    sampler: \"tex0\"\n"
+  "    texture: \"/example/assets/images/aabb_40x40.png\"\n"
+  "  }\n"
   "}\n"
   ""
-}
-embedded_components {
-  id: "label"
-  type: "label"
-  data: "size {\n"
-  "  x: 40.0\n"
-  "  y: 32.0\n"
-  "}\n"
-  "text: \"1\"\n"
-  "font: \"/builtins/fonts/default.font\"\n"
-  "material: \"/builtins/fonts/label-df.material\"\n"
-  ""
-  position {
-    z: 0.01
-  }
 }

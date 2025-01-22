@@ -10,7 +10,7 @@ local collection_title   = "MANIFOLD"
 function init(self)
 	manager.init(collection_title)
 	manager.toogle_manifold()
-	data.add_box(vmath.vector3(-50, -50, 0), data.BOX_TYPE.PLAYER, false)
+	data.add_box(vmath.vector3(0, 0, 0), data.BOX_TYPE.PLAYER, false)
 	data.add_box(vmath.vector3(0, 0, 0), data.BOX_TYPE.ENEMY, true)
 
 	aabb_box = data.boxes[1]
@@ -35,12 +35,13 @@ function update(self, dt)
 				-- Offset the position if a collision occurs."
 				local offset_x = query_result[i].normal_x * query_result[i].depth
 				local offset_y = query_result[i].normal_y * query_result[i].depth
+				local offset_z = query_result[i].normal_z * query_result[i].depth
 
-				manager.world_position = manager.world_position + vmath.vector3(offset_x, offset_y, 0)
+				manager.world_position = manager.world_position + vmath.vector3(offset_x, offset_y, offset_z)
 			end
 		end
 	else
-		data.clear_highlights()
+		--data.clear_highlights()
 	end
 
 	-- Finally set the position

@@ -10,10 +10,10 @@ local collection_title   = "RAYCAST"
 function init(self)
 	manager.init(collection_title)
 
-	data.add_box(vmath.vector3(90, 55, 0), data.BOX_TYPE.PLAYER, true)
-	data.add_box(vmath.vector3(100, 100, 0), data.BOX_TYPE.ENEMY, true)
-	data.add_box(vmath.vector3(50, 50, 0), data.BOX_TYPE.ENEMY, true)
-	data.add_box(vmath.vector3(180, 160, 0), data.BOX_TYPE.GROUND, false, true)
+	data.add_box(vmath.vector3(9, 5, 0), data.BOX_TYPE.PLAYER, true)
+	data.add_box(vmath.vector3(10, 10, 0), data.BOX_TYPE.ENEMY, true)
+	data.add_box(vmath.vector3(5, 5, 0), data.BOX_TYPE.ENEMY, true)
+	data.add_box(vmath.vector3(8, 6, 0), data.BOX_TYPE.GROUND, false, true)
 end
 
 function update(self, dt)
