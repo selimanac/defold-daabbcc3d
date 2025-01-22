@@ -1,3 +1,7 @@
+components {
+  id: "model1"
+  component: "/example/scripts/model.script"
+}
 embedded_components {
   id: "model"
   type: "model"

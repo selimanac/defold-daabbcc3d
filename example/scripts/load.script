@@ -17,7 +17,7 @@ local tests = {
 	}
 }
 
-local current_test = 4
+local current_test = 1
 
 local function show(self, proxy)
 	if self.current_proxy then

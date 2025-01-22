@@ -1,0 +1,26 @@
+go.property("aabb_40x40", resource.texture("/example/assets/images/aabb_40x40.png"))
+go.property("enemy_40x40", resource.texture("/example/assets/images/enemy_40x40.png"))
+go.property("ground_120x60", resource.texture("/example/assets/images/ground_120x60.png"))
+go.property("item_40x40", resource.texture("/example/assets/images/item_40x40.png"))
+go.property("player_40x40", resource.texture("/example/assets/images/player_40x40.png"))
+
+local text = {}
+
+function init(self)
+	text["aabb_40x40"] = self.aabb_40x40
+	text["enemy_40x40"] = self.enemy_40x40
+	text["ground_120x60"] = self.ground_120x60
+	text["item_40x40"] = self.item_40x40
+	text["player_40x40"] = self.player_40x40
+
+	self.model_url = msg.url(".")
+	self.model_url.fragment = "model"
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("set_tex") then
+		pprint(message.tex)
+		pprint(text[message.tex])
+		go.set(self.model_url, "texture0", text[message.tex])
+	end
+end

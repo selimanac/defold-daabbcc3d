@@ -27,7 +27,7 @@ data.BOX_TYPE          = {
 	ITEM = {
 		size          = BOX_SIZE.SQUARE,
 		collision_bit = collision.collision_bits.ITEM,
-		anim          = "aabb_40x40",
+		anim          = "item_40x40",
 		model_url     = msg.url(),
 		label_url     = msg.url(),
 		id            = hash(""),
@@ -76,14 +76,14 @@ data.boxes             = {}
 
 local function setup_box(box, box_position)
 	box.position                = box_position
-	box.id                      = factory.create(box_factory, box.position, nil, nil, vmath.vector3(2, 2, 2))
+	box.id                      = factory.create(box_factory, box.position, nil, nil, vmath.vector3(box.size.width, box.size.height, box.size.depth))
 
 	box.model_url               = msg.url(nil, box.id, "model")
 
 	local light_source_position = go.get_position("/container/light_source")
 	go.set(box.model_url, 'light', vmath.vector4(light_source_position.x, light_source_position.y, light_source_position.z, 1))
 
-
+	msg.post(box.id, "set_tex", { tex = box.anim })
 	return box
 end
 
@@ -144,8 +144,7 @@ function data.highlight(result, count)
 
 		if not box.selected then
 			box.selected = true
-			print("tint")
-			pprint(box.model_url)
+
 			go.animate(box.model_url, "tint.y", go.PLAYBACK_LOOP_PINGPONG, 0.5, go.EASING_LINEAR, 0.4)
 			active_boxes[box.aabb_id] = box.aabb_id
 		end
@@ -176,6 +175,8 @@ end
 function data.reset()
 	data.aabbs = {}
 	data.boxes = {}
+	active_boxes = {}
+	active_box_count = 0
 end
 
 return data

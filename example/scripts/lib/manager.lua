@@ -4,7 +4,8 @@ local camera                     = require("example.scripts.lib.camera")
 local manager                    = {}
 local info_label_url             = msg.url(".")
 local collection_title_label_url = msg.url(".")
-
+local planeNormal                = vmath.vector3(0, 0, 1)
+local planePoint                 = vmath.vector3(0, 0, 0)
 local info_string                = "0 - Reset / 1 - Sort: %s / 2 - Manifold: %s / 3 - Mask: %s"
 local KEYS                       = {
 	AABB_DEFAULT = hash("aabb_default"),
@@ -67,11 +68,7 @@ function manager.init(title_txt)
 	set_info_text()
 end
 
-local planeNormal = vmath.vector3(0, 1, 0)
-local planePoint = vmath.vector3(0, 0, 0)
-
 function manager.input(action_id, action)
-	--manager.world_position = camera.screen_to_world(action.x, action.y, 0)
 	manager.world_position = camera.screen_to_world_plane(action.x, action.y, planeNormal, planePoint)
 
 	if action_id == KEYS.AABB_DEFAULT and action.pressed then
@@ -83,10 +80,6 @@ function manager.input(action_id, action)
 	elseif action_id == KEYS.AABB_MASK and action.pressed then
 		toogle_mask()
 	end
-
-	-- TODO ADD GUI
-
-	--msg.post("load:/proxies#load", "next", {})
 end
 
 function manager.final()
