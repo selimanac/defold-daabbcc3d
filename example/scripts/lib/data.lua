@@ -98,8 +98,6 @@ function data.add_box(box_position, box_type, box_static, animate)
 		box.aabb_id = collision.insert_gameobject(box.id, box.size.width, box.size.height, box.size.depth, box.collision_bit)
 	end
 
-
-
 	table.insert(data.boxes, box)
 	table.insert(data.aabbs, box.aabb_id, #data.boxes)
 

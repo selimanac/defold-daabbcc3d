@@ -10,8 +10,6 @@ local collection_title   = "QUERY AABB"
 function init(self)
 	manager.init(collection_title)
 
-
-
 	data.add_box(vmath.vector3(-5, -5, 0), data.BOX_TYPE.PLAYER, true)
 	data.add_box(vmath.vector3(-5, 10, 0), data.BOX_TYPE.ENEMY, true)
 	data.add_box(vmath.vector3(2, 2, 0), data.BOX_TYPE.ENEMY, true)

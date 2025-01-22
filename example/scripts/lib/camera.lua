@@ -17,48 +17,6 @@ function camera.init()
 	camera_url.fragment = "camera"
 end
 
---[[function camera.screen_to_world(x, y)
-
-	if delta then
-		x = x / M.viewport.scale.x
-		y = y / M.viewport.scale.y
-	else
-		x = (x - M.viewport.x) / M.viewport.scale.x
-		y = (y - M.viewport.y) / M.viewport.scale.y
-	end
-
-	local screenPosition = vmath.vector3(x, y, z)
-
-	local world_position = vmath.vector3()
-	local projection = go.get(camera_url, "projection")
-	local view = go.get(camera_url, "view")
-	local w, h = window.get_size()
-
-	local m = vmath.inv(projection * view)
-
-	local x1 = (screenPosition.x - w * 0.5) / w * 2
-	local y1 = (screenPosition.y - h * 0.5) / h * 2
-
-	nv.x, nv.y = x1, y1
-	fv.x, fv.y = x1, y1
-	local np = m * nv
-	local fp = m * fv
-	np = np * (1 / np.w)
-	fp = fp * (1 / fp.w)
-
-	local npp = vmath.vector3(np.x, np.y, np.z)
-	local fpp = vmath.vector3(fp.x, fp.y, fp.z)
-
-	local denom = vmath.dot(VECTOR_UP, fpp - npp)
-
-	if denom == 0 then
-		return
-	else
-		local numer = vmath.dot(VECTOR_UP, PIVOT - npp)
-		return vmath.lerp(numer / denom, npp, fpp)
-	end
-end]]
-
 function camera.screen_to_viewport(x, y, delta)
 	if delta then
 		x = x / M.viewport.scale.x
@@ -70,6 +28,7 @@ function camera.screen_to_viewport(x, y, delta)
 	return x, y
 end
 
+-- from rendercam
 function camera.screen_to_world_2d(x, y, delta, worldz, raw)
 	--	x, y = camera.screen_to_viewport(x, y, delta)
 
