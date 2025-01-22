@@ -1,0 +1,15 @@
+embedded_components {
+  id: "model"
+  type: "model"
+  data: "mesh: \"/builtins/assets/meshes/cube.dae\"\n"
+  "name: \"{{NAME}}\"\n"
+  "materials {\n"
+  "  name: \"default\"\n"
+  "  material: \"/builtins/materials/model.material\"\n"
+  "  textures {\n"
+  "    sampler: \"tex0\"\n"
+  "    texture: \"/example2/assets/logov3.png\"\n"
+  "  }\n"
+  "}\n"
+  ""
+}
