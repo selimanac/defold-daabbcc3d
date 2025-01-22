@@ -9,7 +9,7 @@ width = 960
 height = 640
 
 [project]
-title = defold-daabbcc3D
+title = defold-daabbcc3d
 dependencies#0 = https://github.com/selimanac/defold-random/archive/refs/heads/master.zip
 
 [library]
