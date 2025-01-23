@@ -1140,8 +1140,20 @@ namespace daabbcc3d
 
         b2Vec3 r = b2Normalize(d);
 
+        // To @selim -> this is added
+        b2Vec3 up;
+        if (b2AbsFloat(d.x) < 0.001f && b2AbsFloat(d.z) < 0.001f)
+        {
+            // If the ray is pointing almost straight up or down, use a different up vector
+            up = { 1.0f, 0.0f, 0.0f }; // Arbitrary horizontal vector
+        }
+        else
+        {
+            up = { 0.0f, 1.0f, 0.0f }; // Standard up vector
+        }
+
         // v is perpendicular to the segment.
-        b2Vec3 v = b2CrossSV(1.0f, r);
+        b2Vec3 v = b2Cross(up, r); // To @selim -> this is replaced ->  // b2Vec2 v = b2CrossSV(1.0f, r);
         b2Vec3 abs_v = b2Abs(v);
 
         // Separating axis for segment (Gino, p80).
