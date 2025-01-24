@@ -53,9 +53,9 @@ namespace daabbcc3d
         int32_t                 m_proxyID;
         dmVMath::Point3         m_position;
         dmGameObject::HInstance m_gameObjectInstance;
-        uint32_t                m_width;
-        uint32_t                m_height;
-        uint32_t                m_depth;
+        float                   m_width;
+        float                   m_height;
+        float                   m_depth;
         bool                    m_getWorldPosition = false;
     } GameObject;
 
@@ -134,13 +134,13 @@ namespace daabbcc3d
     // Proxy Operations
     ////////////////////////////////////////
 
-    int32_t AddProxy(uint8_t groupID, float x, float y, float z, uint32_t width, uint32_t height, uint32_t depth, uint64_t categoryBits);
+    int32_t AddProxy(uint8_t groupID, float x, float y, float z, float width, float height, float depth, uint64_t categoryBits);
 
-    void    AddGameObject(uint8_t groupID, int32_t proxyID, dmVMath::Point3 position, uint32_t width, uint32_t height, uint32_t depth, dmGameObject::HInstance gameObjectInstance, bool getWorldPosition);
+    void    AddGameObject(uint8_t groupID, int32_t proxyID, dmVMath::Point3 position, float width, float height, float depth, dmGameObject::HInstance gameObjectInstance, bool getWorldPosition);
 
-    void    MoveProxy(int32_t proxyID, float x, float y, float z, uint32_t width, uint32_t height, uint32_t depth);
+    void    MoveProxy(int32_t proxyID, float x, float y, float z, float width, float height, float depth);
 
-    void    UpdateGameobjectSize(uint8_t groupID, int32_t proxyID, uint32_t width, uint32_t height, uint32_t depth);
+    void    UpdateGameobjectSize(uint8_t groupID, int32_t proxyID, float width, float height, float depth);
 
     void    RemoveProxy(uint8_t groupID, int32_t proxyID);
 
@@ -148,11 +148,11 @@ namespace daabbcc3d
     // Query Operations
     ////////////////////////////////////////
 
-    void QueryAABB(float x, float y, float z, uint32_t width, uint32_t height, uint32_t depth, uint64_t maskBits, bool isManifold);
+    void QueryAABB(float x, float y, float z, float width, float height, float depth, uint64_t maskBits, bool isManifold);
 
     void QueryID(int32_t proxyID, uint64_t maskBits, bool isManifold);
 
-    void QueryAABBSort(float x, float y, float z, uint32_t width, uint32_t height, uint32_t depth, uint64_t maskBits, bool isManifold);
+    void QueryAABBSort(float x, float y, float z, float width, float height, float depth, uint64_t maskBits, bool isManifold);
 
     void QueryIDSort(int32_t proxyID, uint64_t maskBits, bool isManifold);
 
@@ -201,7 +201,7 @@ namespace daabbcc3d
 
     static void        AABBtoAABBManifold(b2AABB A, b2AABB B, b2Manifold* m);
 
-    static inline void Bound(b2AABB* aabb, float x, float y, float z, uint32_t width, uint32_t height, uint32_t depth);
+    static inline void Bound(b2AABB* aabb, float x, float y, float z, float width, float height, float depth);
 
     static void        CalcTimeStep(float& step_dt, uint32_t& num_steps);
 

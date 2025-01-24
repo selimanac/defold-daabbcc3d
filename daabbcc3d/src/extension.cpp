@@ -2,6 +2,7 @@
 #include "dmsdk/dlib/configfile_gen.hpp"
 #include "dmsdk/dlib/log.h"
 #include "dmsdk/extension/extension_gen.hpp"
+#include "dmsdk/lua/lauxlib.h"
 
 #define LIB_NAME "DAABBCC3D"
 #define MODULE_NAME "daabbcc3d"
@@ -203,9 +204,9 @@ static int QueryAABBSort(lua_State* L)
     }
 
     dmVMath::Vector3* position = dmScript::CheckVector3(L, 2);
-    uint32_t          width = luaL_checkint(L, 3);
-    uint32_t          height = luaL_checkint(L, 4);
-    uint32_t          depth = luaL_checkint(L, 5);
+    float             width = luaL_checknumber(L, 3);
+    float             height = luaL_checknumber(L, 4);
+    float             depth = luaL_checknumber(L, 5);
     uint64_t          maskBits = B2_DEFAULT_MASK_BITS;
     bool              isManifold = false;
 
@@ -262,9 +263,9 @@ static int QueryAABB(lua_State* L)
     }
 
     dmVMath::Vector3* position = dmScript::CheckVector3(L, 2);
-    uint32_t          width = luaL_checkint(L, 3);
-    uint32_t          height = luaL_checkint(L, 4);
-    uint32_t          depth = luaL_checkint(L, 5);
+    float             width = luaL_checknumber(L, 3);
+    float             height = luaL_checknumber(L, 4);
+    float             depth = luaL_checknumber(L, 5);
     uint64_t          maskBits = B2_DEFAULT_MASK_BITS;
     bool              isManifold = false;
 
@@ -517,9 +518,9 @@ static int AddProxy(lua_State* L)
     }
 
     dmVMath::Vector3* position = dmScript::CheckVector3(L, 2);
-    uint32_t          width = luaL_checkint(L, 3);
-    uint32_t          height = luaL_checkint(L, 4);
-    uint32_t          depth = luaL_checkint(L, 5);
+    float             width = luaL_checknumber(L, 3);
+    float             height = luaL_checknumber(L, 4);
+    float             depth = luaL_checknumber(L, 5);
     uint64_t          categoryBits = B2_DEFAULT_CATEGORY_BITS;
 
     if (lua_isnumber(L, 6))
@@ -550,9 +551,9 @@ static int AddGameObject(lua_State* L)
     dmGameObject::HInstance gameobjectInstance = dmScript::CheckGOInstance(L, 2);
 
     dmVMath::Point3         gameobjectPosition = dmGameObject::GetPosition(gameobjectInstance);
-    uint32_t                width = luaL_checkint(L, 3);
-    uint32_t                height = luaL_checkint(L, 4);
-    uint32_t                depth = luaL_checkint(L, 5);
+    float                   width = luaL_checknumber(L, 3);
+    float                   height = luaL_checknumber(L, 4);
+    float                   depth = luaL_checknumber(L, 5);
     uint64_t                categoryBits = B2_DEFAULT_CATEGORY_BITS;
     bool                    getWorldPosition = false;
 
@@ -590,9 +591,9 @@ static int MoveProxy(lua_State* L)
 
     int32_t           proxyID = luaL_checkint(L, 2);
     dmVMath::Vector3* position = dmScript::CheckVector3(L, 3);
-    uint32_t          width = luaL_checkint(L, 4);
-    uint32_t          height = luaL_checkint(L, 5);
-    uint32_t          depth = luaL_checkint(L, 6);
+    float             width = luaL_checknumber(L, 4);
+    float             height = luaL_checknumber(L, 5);
+    float             depth = luaL_checknumber(L, 6);
 
     daabbcc3d::MoveProxy(proxyID, position->getX(), position->getY(), position->getZ(), width, height, depth);
 
@@ -612,10 +613,10 @@ static int UpdateGameobjectSize(lua_State* L)
         return 0;
     }
 
-    int32_t  proxyID = luaL_checkint(L, 2);
-    uint32_t width = luaL_checkint(L, 3);
-    uint32_t height = luaL_checkint(L, 4);
-    uint32_t depth = luaL_checkint(L, 5);
+    int32_t proxyID = luaL_checkint(L, 2);
+    float   width = luaL_checknumber(L, 3);
+    float   height = luaL_checknumber(L, 4);
+    float   depth = luaL_checknumber(L, 5);
 
     daabbcc3d::UpdateGameobjectSize(groupID, proxyID, width, height, depth);
 
