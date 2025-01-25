@@ -19,7 +19,7 @@ namespace daabbcc3d
         float    depth;
         b2Vec3   contact_point;
         b2Vec3   n;
-        b2Vec3   position;
+
     } b2Manifold;
 
     struct ManifoldResult
