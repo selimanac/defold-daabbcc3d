@@ -389,7 +389,6 @@ namespace daabbcc3d
 
                 m_daabbcc.m_manifold.n = m_daabbcc.m_raycastOutput.normal;
                 m_daabbcc.m_manifold.contact_point = m_daabbcc.m_raycastOutput.point;
-                m_daabbcc.m_manifold.position = input->origin + m_daabbcc.m_raycastOutput.fraction * input->translation;
 
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
