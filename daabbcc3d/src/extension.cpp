@@ -126,6 +126,15 @@ static inline void ManifoldResult(lua_State* L, uint32_t queryResultSize, dmArra
         lua_pushstring(L, "normal_z");
         lua_pushnumber(L, queryResult[i].m_manifold.n.z);
         lua_settable(L, -3);
+        lua_pushstring(L, "position_x");
+        lua_pushnumber(L, queryResult[i].m_manifold.position.x);
+        lua_settable(L, -3);
+        lua_pushstring(L, "position_y");
+        lua_pushnumber(L, queryResult[i].m_manifold.position.y);
+        lua_settable(L, -3);
+        lua_pushstring(L, "position_z");
+        lua_pushnumber(L, queryResult[i].m_manifold.position.z);
+        lua_settable(L, -3);
 
         lua_rawseti(L, newTable, i + 1);
     }
