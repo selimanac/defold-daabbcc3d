@@ -2,6 +2,7 @@
 #include "dmsdk/dlib/configfile_gen.hpp"
 #include "dmsdk/dlib/log.h"
 #include "dmsdk/extension/extension_gen.hpp"
+#include "dmsdk/gameobject/gameobject.h"
 #include "dmsdk/lua/lauxlib.h"
 
 #define LIB_NAME "DAABBCC3D"
@@ -557,14 +558,19 @@ static int AddGameObject(lua_State* L)
     uint64_t                categoryBits = B2_DEFAULT_CATEGORY_BITS;
     bool                    getWorldPosition = false;
 
-    if (lua_isnumber(L, 5))
+    if (lua_isnumber(L, 6))
     {
-        categoryBits = luaL_checkinteger(L, 5);
+        categoryBits = luaL_checkinteger(L, 6);
     }
 
-    if (lua_isboolean(L, 6))
+    if (lua_isboolean(L, 7))
     {
-        getWorldPosition = lua_toboolean(L, 6);
+        getWorldPosition = lua_toboolean(L, 7);
+    }
+
+    if (getWorldPosition)
+    {
+        gameobjectPosition = dmGameObject::GetWorldPosition(gameobjectInstance);
     }
 
     int32_t proxyID = daabbcc3d::AddProxy(groupID, gameobjectPosition.getX(), gameobjectPosition.getY(), gameobjectPosition.getZ(), width, height, depth, categoryBits);
