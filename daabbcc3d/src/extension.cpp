@@ -4,6 +4,7 @@
 #include "dmsdk/extension/extension_gen.hpp"
 #include "dmsdk/gameobject/gameobject.h"
 #include "dmsdk/lua/lauxlib.h"
+#include "dmsdk/script/script.h"
 
 #define LIB_NAME "DAABBCC3D"
 #define MODULE_NAME "daabbcc3d"
@@ -109,23 +110,11 @@ static inline void ManifoldResult(lua_State* L, uint32_t queryResultSize, dmArra
         lua_pushstring(L, "depth");
         lua_pushnumber(L, queryResult[i].m_manifold.depth);
         lua_settable(L, -3);
-        lua_pushstring(L, "contact_point_x");
-        lua_pushnumber(L, queryResult[i].m_manifold.contact_point.x);
+        lua_pushstring(L, "contact_point");
+        dmScript::PushVector3(L, queryResult[i].m_manifold.contact_point);
         lua_settable(L, -3);
-        lua_pushstring(L, "contact_point_y");
-        lua_pushnumber(L, queryResult[i].m_manifold.contact_point.y);
-        lua_settable(L, -3);
-        lua_pushstring(L, "contact_point_z");
-        lua_pushnumber(L, queryResult[i].m_manifold.contact_point.z);
-        lua_settable(L, -3);
-        lua_pushstring(L, "normal_x");
-        lua_pushnumber(L, queryResult[i].m_manifold.n.x);
-        lua_settable(L, -3);
-        lua_pushstring(L, "normal_y");
-        lua_pushnumber(L, queryResult[i].m_manifold.n.y);
-        lua_settable(L, -3);
-        lua_pushstring(L, "normal_z");
-        lua_pushnumber(L, queryResult[i].m_manifold.n.z);
+        lua_pushstring(L, "normal");
+        dmScript::PushVector3(L, queryResult[i].m_manifold.normal);
         lua_settable(L, -3);
 
         lua_rawseti(L, newTable, i + 1);

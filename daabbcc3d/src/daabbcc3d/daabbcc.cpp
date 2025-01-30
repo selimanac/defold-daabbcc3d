@@ -344,8 +344,16 @@ namespace daabbcc3d
 
                 m_daabbcc.m_raycastOutput = b2AABB_RayCast(m_daabbcc.m_manifoldAABB, input->origin, m_queryContainer->m_center); // m_center is used for m_endPoint here
 
-                m_daabbcc.m_manifold.n = m_daabbcc.m_raycastOutput.normal;
-                m_daabbcc.m_manifold.contact_point = m_daabbcc.m_raycastOutput.point;
+                m_daabbcc.m_manifold.normal.setX(m_daabbcc.m_raycastOutput.normal.x);
+                m_daabbcc.m_manifold.normal.setY(m_daabbcc.m_raycastOutput.normal.y);
+                m_daabbcc.m_manifold.normal.setZ(m_daabbcc.m_raycastOutput.normal.z);
+
+                m_daabbcc.m_manifold.contact_point.setX(m_daabbcc.m_raycastOutput.point.x);
+                m_daabbcc.m_manifold.contact_point.setY(m_daabbcc.m_raycastOutput.point.y);
+                m_daabbcc.m_manifold.contact_point.setZ(m_daabbcc.m_raycastOutput.point.z);
+
+                //   m_daabbcc.m_manifold.n = m_daabbcc.m_raycastOutput.normal;
+                //   m_daabbcc.m_manifold.contact_point = m_daabbcc.m_raycastOutput.point;
 
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
@@ -387,8 +395,16 @@ namespace daabbcc3d
 
                 m_daabbcc.m_raycastOutput = b2AABB_RayCast(m_daabbcc.m_manifoldAABB, input->origin, m_queryContainer->m_center); // m_center is used for m_endPoint here
 
-                m_daabbcc.m_manifold.n = m_daabbcc.m_raycastOutput.normal;
-                m_daabbcc.m_manifold.contact_point = m_daabbcc.m_raycastOutput.point;
+                m_daabbcc.m_manifold.normal.setX(m_daabbcc.m_raycastOutput.normal.x);
+                m_daabbcc.m_manifold.normal.setY(m_daabbcc.m_raycastOutput.normal.y);
+                m_daabbcc.m_manifold.normal.setZ(m_daabbcc.m_raycastOutput.normal.z);
+
+                m_daabbcc.m_manifold.contact_point.setX(m_daabbcc.m_raycastOutput.point.x);
+                m_daabbcc.m_manifold.contact_point.setY(m_daabbcc.m_raycastOutput.point.y);
+                m_daabbcc.m_manifold.contact_point.setZ(m_daabbcc.m_raycastOutput.point.z);
+
+                //   m_daabbcc.m_manifold.n = m_daabbcc.m_raycastOutput.normal;
+                //   m_daabbcc.m_manifold.contact_point = m_daabbcc.m_raycastOutput.point;
 
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
@@ -619,9 +635,17 @@ namespace daabbcc3d
         }
 
         m->count = 1;
-        m->contact_point = p;
+        //   m->contact_point = p;
+        m->contact_point.setX(p.x);
+        m->contact_point.setY(p.y);
+        m->contact_point.setZ(p.z);
+
         m->depth = depth;
-        m->n = n;
+
+        m->normal.setX(n.x);
+        m->normal.setY(n.y);
+        m->normal.setZ(n.z);
+        //   m->n = n;
     }
 
     static inline void Bound(b2AABB* aabb, float x, float y, float z, float width, float height, float depth)

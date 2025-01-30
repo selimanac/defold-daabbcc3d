@@ -1,6 +1,7 @@
 #pragma once
 
 #include "daabbcc3d/math_functions.h"
+#include "dmsdk/dlib/vmath.h"
 #include <cstdint>
 #include <daabbcc3d/constants.h>
 #include <daabbcc3d/collision.h>
@@ -15,10 +16,10 @@ namespace daabbcc3d
     // Manifold
     typedef struct b2Manifold
     {
-        uint16_t count;
-        float    depth;
-        b2Vec3   contact_point;
-        b2Vec3   n;
+        uint16_t         count;
+        float            depth;
+        dmVMath::Vector3 contact_point;
+        dmVMath::Vector3 normal;
 
     } b2Manifold;
 
