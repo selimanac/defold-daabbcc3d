@@ -384,7 +384,8 @@ namespace daabbcc3d
 
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
-                    b2Distance(input->origin, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
+                    input->distance
+                    // b2Distance(input->origin, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
                 };
 
                 m_daabbcc.m_queryManifoldResult.Push(m_daabbcc.m_manifoldResult);
@@ -408,7 +409,8 @@ namespace daabbcc3d
 
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
-                    b2Distance(input->origin, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
+                    input->distance,
+                    // b2Distance(input->origin, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
                     m_daabbcc.m_manifold
                 };
 

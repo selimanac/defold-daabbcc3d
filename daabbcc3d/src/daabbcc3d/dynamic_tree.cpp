@@ -1064,13 +1064,76 @@ namespace daabbcc3d
     }
 
     // To @selim -> this is added
-    bool RayIntersectsAABB(const b2Vec3& rayStart, const b2Vec3& rayEnd, const b2AABB& aabb)
+    /* bool RayIntersectsAABB(const b2Vec3& rayStart, const b2Vec3& rayEnd, const b2AABB& aabb)
+     {
+         // Calculate the direction vector of the ray
+         b2Vec3 dir = b2Sub(rayEnd, rayStart);
+         float  tmin = 0.0f;    // Start from zero
+         float  tmax = FLT_MAX; // Max distance to check
+         float  epsilon = 0.00001f;
+
+         // X axis
+         if (fabsf(dir.x) > epsilon)
+         {
+             float tx1 = (aabb.lowerBound.x - rayStart.x) / dir.x;
+             float tx2 = (aabb.upperBound.x - rayStart.x) / dir.x;
+             tmin = b2MaxFloat(tmin, b2MinFloat(tx1, tx2));
+             tmax = b2MinFloat(tmax, b2MaxFloat(tx1, tx2));
+         }
+         else
+         {
+             // Ray is parallel to the AABB in the X direction
+             if (rayStart.x < aabb.lowerBound.x || rayStart.x > aabb.upperBound.x)
+             {
+                 return false; // Ray is outside AABB
+             }
+         }
+
+         // Y axis
+         if (fabsf(dir.y) > epsilon)
+         {
+             float ty1 = (aabb.lowerBound.y - rayStart.y) / dir.y;
+             float ty2 = (aabb.upperBound.y - rayStart.y) / dir.y;
+             tmin = b2MaxFloat(tmin, b2MinFloat(ty1, ty2));
+             tmax = b2MinFloat(tmax, b2MaxFloat(ty1, ty2));
+         }
+         else
+         {
+             // Ray is parallel to the AABB in the Y direction
+             if (rayStart.y < aabb.lowerBound.y || rayStart.y > aabb.upperBound.y)
+             {
+                 return false; // Ray is outside AABB
+             }
+         }
+
+         // Z axis
+         if (fabsf(dir.z) > epsilon)
+         {
+             float tz1 = (aabb.lowerBound.z - rayStart.z) / dir.z;
+             float tz2 = (aabb.upperBound.z - rayStart.z) / dir.z;
+             tmin = b2MaxFloat(tmin, b2MinFloat(tz1, tz2));
+             tmax = b2MinFloat(tmax, b2MaxFloat(tz1, tz2));
+         }
+         else
+         {
+             // Ray is parallel to the AABB in the Z direction
+             if (rayStart.z < aabb.lowerBound.z || rayStart.z > aabb.upperBound.z)
+             {
+                 return false; // Ray is outside AABB
+             }
+         }
+
+         return tmax >= tmin; // Ensure there is a valid intersection
+     }*/
+
+    bool RayIntersectsAABB(const b2Vec3& rayStart, const b2Vec3& rayEnd, const b2AABB& aabb, float& outDistance)
     {
-        // Calculate the direction vector of the ray
+        // Direction vector
         b2Vec3 dir = b2Sub(rayEnd, rayStart);
-        float  tmin = 0.0f;    // Start from zero
-        float  tmax = FLT_MAX; // Max distance to check
-        float  epsilon = 0.00001f;
+
+        float  tmin = 0.0f;     // Start from zero
+        float  tmax = 1.0f;     // Since rayEnd is finite, max distance is 1 (scaled)
+        float  epsilon = 1e-6f; // Small threshold to prevent division errors
 
         // X axis
         if (fabsf(dir.x) > epsilon)
@@ -1080,13 +1143,9 @@ namespace daabbcc3d
             tmin = b2MaxFloat(tmin, b2MinFloat(tx1, tx2));
             tmax = b2MinFloat(tmax, b2MaxFloat(tx1, tx2));
         }
-        else
+        else if (rayStart.x < aabb.lowerBound.x || rayStart.x > aabb.upperBound.x)
         {
-            // Ray is parallel to the AABB in the X direction
-            if (rayStart.x < aabb.lowerBound.x || rayStart.x > aabb.upperBound.x)
-            {
-                return false; // Ray is outside AABB
-            }
+            return false; // Ray is outside and parallel to X axis
         }
 
         // Y axis
@@ -1097,13 +1156,9 @@ namespace daabbcc3d
             tmin = b2MaxFloat(tmin, b2MinFloat(ty1, ty2));
             tmax = b2MinFloat(tmax, b2MaxFloat(ty1, ty2));
         }
-        else
+        else if (rayStart.y < aabb.lowerBound.y || rayStart.y > aabb.upperBound.y)
         {
-            // Ray is parallel to the AABB in the Y direction
-            if (rayStart.y < aabb.lowerBound.y || rayStart.y > aabb.upperBound.y)
-            {
-                return false; // Ray is outside AABB
-            }
+            return false; // Ray is outside and parallel to Y axis
         }
 
         // Z axis
@@ -1114,16 +1169,20 @@ namespace daabbcc3d
             tmin = b2MaxFloat(tmin, b2MinFloat(tz1, tz2));
             tmax = b2MinFloat(tmax, b2MaxFloat(tz1, tz2));
         }
-        else
+        else if (rayStart.z < aabb.lowerBound.z || rayStart.z > aabb.upperBound.z)
         {
-            // Ray is parallel to the AABB in the Z direction
-            if (rayStart.z < aabb.lowerBound.z || rayStart.z > aabb.upperBound.z)
-            {
-                return false; // Ray is outside AABB
-            }
+            return false; // Ray is outside and parallel to Z axis
         }
 
-        return tmax >= tmin; // Ensure there is a valid intersection
+        // Valid intersection check
+        if (tmax >= tmin && tmin >= 0.0f && tmin <= 1.0f)
+        {
+            // Compute the actual intersection distance
+            outDistance = sqrtf(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z) * tmin;
+            return true;
+        }
+
+        return false;
     }
 
     b2TreeStats b2DynamicTree_RayCast(const b2DynamicTree* tree, const b2RayCastInput* input, uint64_t maskBits, b2TreeRayCastCallbackFcn* callback, void* context)
@@ -1208,10 +1267,12 @@ namespace daabbcc3d
 
             if (b2IsLeaf(node))
             {
+                float hitDistance;
                 // To @selim -> this is added
-                if (RayIntersectsAABB(p1, p2, node->aabb))
+                if (RayIntersectsAABB(p1, p2, node->aabb, hitDistance))
                 {
                     subInput.maxFraction = maxFraction;
+                    subInput.distance = hitDistance;
 
                     float value = callback(&subInput, nodeId, node->userData, context);
                     result.leafVisits += 1;

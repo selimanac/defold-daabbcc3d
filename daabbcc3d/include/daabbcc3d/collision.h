@@ -19,6 +19,8 @@ namespace daabbcc3d
 
         /// The maximum fraction of the translation to consider, typically 1
         float maxFraction;
+
+        float distance;
     } b2RayCastInput;
 
     /// Low level ray cast or shape-cast output data
