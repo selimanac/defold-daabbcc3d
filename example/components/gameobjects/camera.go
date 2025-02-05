@@ -16,26 +16,6 @@ components {
     value: "0.0"
     type: PROPERTY_TYPE_NUMBER
   }
-  properties {
-    id: "angle_x"
-    value: "0.0"
-    type: PROPERTY_TYPE_NUMBER
-  }
-  properties {
-    id: "angle_y"
-    value: "0.0"
-    type: PROPERTY_TYPE_NUMBER
-  }
-  properties {
-    id: "angle_min"
-    value: "0.0"
-    type: PROPERTY_TYPE_NUMBER
-  }
-  properties {
-    id: "angle_max"
-    value: "0.0"
-    type: PROPERTY_TYPE_NUMBER
-  }
 }
 embedded_components {
   id: "camera"

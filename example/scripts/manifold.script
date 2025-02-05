@@ -33,9 +33,9 @@ function update(self, dt)
 			for i = 1, query_result_count do
 				pprint(query_result[i])
 				-- Offset the position if a collision occurs."
-				local offset_x = query_result[i].normal_x * query_result[i].depth
-				local offset_y = query_result[i].normal_y * query_result[i].depth
-				local offset_z = query_result[i].normal_z * query_result[i].depth
+				local offset_x = query_result[i].normal.x * query_result[i].depth
+				local offset_y = query_result[i].normal.y * query_result[i].depth
+				local offset_z = query_result[i].normal.z * query_result[i].depth
 
 				manager.world_position = manager.world_position + vmath.vector3(offset_x, offset_y, offset_z)
 			end
