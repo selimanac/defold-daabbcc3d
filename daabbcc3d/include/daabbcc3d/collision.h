@@ -20,6 +20,7 @@ namespace daabbcc3d
         /// The maximum fraction of the translation to consider, typically 1
         float maxFraction;
 
+        // To @selim -> this is added
         float distance;
     } b2RayCastInput;
 
