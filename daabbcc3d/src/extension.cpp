@@ -1,11 +1,4 @@
 // Extension lib defines
-#include "dmsdk/dlib/configfile_gen.hpp"
-#include "dmsdk/dlib/log.h"
-#include "dmsdk/extension/extension_gen.hpp"
-#include "dmsdk/gameobject/gameobject.h"
-#include "dmsdk/lua/lauxlib.h"
-#include "dmsdk/script/script.h"
-
 #define LIB_NAME "DAABBCC3D"
 #define MODULE_NAME "daabbcc3d"
 
