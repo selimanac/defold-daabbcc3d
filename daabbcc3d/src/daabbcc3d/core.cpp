@@ -3,6 +3,7 @@
 
 #include "daabbcc3d/core.h"
 #include "dmsdk/dlib/log.h"
+
 #if defined(B2_COMPILER_MSVC)
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -11,32 +12,32 @@
 #include <stdlib.h>
 #endif
 
-#include <stdatomic.h>
-#include <string.h>
-
-#ifdef BOX2D_PROFILE
-
-#include <tracy/TracyC.h>
-#define b2TracyCAlloc(ptr, size) TracyCAlloc(ptr, size)
-#define b2TracyCFree(ptr) TracyCFree(ptr)
-
-#else
-
-#define b2TracyCAlloc(ptr, size)
-#define b2TracyCFree(ptr)
-
-#endif
-
-#include <daabbcc3d/math_functions.h>
-
 #include <stdio.h>
+#include <string.h>
+#include <daabbcc3d/math_functions.h>
 
 namespace daabbcc3d
 {
     // This allows the user to change the length units at runtime
     float b2_lengthUnitsPerMeter = 1.0f;
 
-    void  b2SetLengthUnitsPerMeter(float lengthUnits)
+    typedef struct b2AtomicInt
+    {
+        int value;
+    } b2AtomicInt;
+
+    int b2AtomicFetchAddInt(b2AtomicInt* a, int increment)
+    {
+#if defined(_MSC_VER)
+        return _InterlockedExchangeAdd((long*)&a->value, (long)increment);
+#elif defined(__GNUC__) || defined(__clang__)
+        return __atomic_fetch_add(&a->value, increment, __ATOMIC_SEQ_CST);
+#else
+#error "Unsupported platform"
+#endif
+    }
+
+    void b2SetLengthUnitsPerMeter(float lengthUnits)
     {
         B2_ASSERT(b2IsValidFloat(lengthUnits) && lengthUnits > 0.0f);
         b2_lengthUnitsPerMeter = lengthUnits;
@@ -71,7 +72,7 @@ namespace daabbcc3d
     static b2AllocFcn* b2_allocFcn = NULL;
     static b2FreeFcn*  b2_freeFcn = NULL;
 
-    static _Atomic int b2_byteCount;
+    b2AtomicInt        b2_byteCount;
 
     void               b2SetAllocator(b2AllocFcn* allocFcn, b2FreeFcn* freeFcn)
     {
@@ -90,7 +91,7 @@ namespace daabbcc3d
         }
 
         // This could cause some sharing issues, however Box2D rarely calls b2Alloc.
-        atomic_fetch_add_explicit(&b2_byteCount, size, memory_order_relaxed);
+        b2AtomicFetchAddInt(&b2_byteCount, size);
 
         // Allocation must be a multiple of 32 or risk a seg fault
         // https://en.cppreference.com/w/c/memory/aligned_alloc
@@ -99,7 +100,7 @@ namespace daabbcc3d
         if (b2_allocFcn != NULL)
         {
             void* ptr = b2_allocFcn(size32, B2_ALIGNMENT);
-            b2TracyCAlloc(ptr, size);
+            //    b2TracyCAlloc(ptr, size);
 
             B2_ASSERT(ptr != NULL);
             B2_ASSERT(((uintptr_t)ptr & 0x1F) == 0);
@@ -120,7 +121,7 @@ namespace daabbcc3d
         void* ptr = aligned_alloc(B2_ALIGNMENT, size32);
 #endif
 
-        b2TracyCAlloc(ptr, size);
+        //  b2TracyCAlloc(ptr, size);
 
         B2_ASSERT(ptr != NULL);
         B2_ASSERT(((uintptr_t)ptr & 0x1F) == 0);
@@ -135,7 +136,7 @@ namespace daabbcc3d
             return;
         }
 
-        b2TracyCFree(mem);
+        // b2TracyCFree(mem);
 
         if (b2_freeFcn != NULL)
         {
@@ -149,8 +150,7 @@ namespace daabbcc3d
             free(mem);
 #endif
         }
-
-        atomic_fetch_sub_explicit(&b2_byteCount, size, memory_order_relaxed);
+        b2AtomicFetchAddInt(&b2_byteCount, -size);
     }
 
 } // namespace daabbcc3d
