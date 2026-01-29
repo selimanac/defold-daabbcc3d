@@ -17,4 +17,4 @@ compile_commands.json
 *.der
 RELEASE-NOTES.md
 /.editor_settings
-build_config.json
+build_config.json_codeql_detected_source_root
