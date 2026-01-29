@@ -30,44 +30,44 @@ function collision.insert_gameobject(go_url, width, height, depth, collision_bit
 	return daabbcc3d.insert_gameobject(aabb_group_id, go_url, width, height, depth, collision_bit)
 end
 
-function collision.query_aabb(position, width, height, depth, is_mask, get_manifold)
+function collision.query_aabb(position, width, height, depth, is_mask, get_manifold, is_mask)
 	local mask_bits = is_mask and selected_mask_bits or default_mask_bits
 	get_manifold    = get_manifold and get_manifold or nil
-	return daabbcc3d.query_aabb(aabb_group_id, position, width, height, depth, mask_bits, get_manifold)
+	return daabbcc3d.query_aabb(aabb_group_id, position, width, height, depth, mask_bits, get_manifold, is_mask)
 end
 
-function collision.query_id(aabb_id, is_mask, get_manifold)
+function collision.query_id(aabb_id, is_mask, get_manifold, is_mask)
 	local mask_bits = is_mask and selected_mask_bits or default_mask_bits
 	get_manifold    = get_manifold and get_manifold or nil
-	return daabbcc3d.query_id(aabb_group_id, aabb_id, mask_bits, get_manifold)
+	return daabbcc3d.query_id(aabb_group_id, aabb_id, mask_bits, get_manifold, is_mask)
 end
 
 function collision.query_id_btn(aabb_id)
 	return daabbcc3d.query_id(aabb_group_id, aabb_id, btn_mask_bits)
 end
 
-function collision.query_id_sort(aabb_id, is_mask, get_manifold)
+function collision.query_id_sort(aabb_id, is_mask, get_manifold, is_mask)
 	local mask_bits = is_mask and selected_mask_bits or default_mask_bits
 	get_manifold    = get_manifold and get_manifold or nil
-	return daabbcc3d.query_id_sort(aabb_group_id, aabb_id, mask_bits, get_manifold)
+	return daabbcc3d.query_id_sort(aabb_group_id, aabb_id, mask_bits, get_manifold, is_mask)
 end
 
-function collision.query_aabb_sort(position, width, height, depth, is_mask, get_manifold)
+function collision.query_aabb_sort(position, width, height, depth, is_mask, get_manifold, is_mask)
 	local mask_bits = is_mask and selected_mask_bits or default_mask_bits
 	get_manifold    = get_manifold and get_manifold or nil
-	return daabbcc3d.query_aabb_sort(aabb_group_id, position, width, height, depth, mask_bits, get_manifold)
+	return daabbcc3d.query_aabb_sort(aabb_group_id, position, width, height, depth, mask_bits, get_manifold, is_mask)
 end
 
-function collision.raycast(ray_start, ray_end, is_mask, get_manifold)
+function collision.raycast(ray_start, ray_end, is_mask, get_manifold, is_mask)
 	local mask_bits = is_mask and selected_mask_bits or default_mask_bits
 	get_manifold    = get_manifold and get_manifold or nil
-	return daabbcc3d.raycast(aabb_group_id, ray_start, ray_end, mask_bits, get_manifold)
+	return daabbcc3d.raycast(aabb_group_id, ray_start, ray_end, mask_bits, get_manifold, is_mask)
 end
 
-function collision.raycast_sort(ray_start, ray_end, is_mask, get_manifold)
+function collision.raycast_sort(ray_start, ray_end, is_mask, get_manifold, is_mask)
 	local mask_bits = is_mask and selected_mask_bits or default_mask_bits
 	get_manifold    = get_manifold and get_manifold or nil
-	return daabbcc3d.raycast_sort(aabb_group_id, ray_start, ray_end, mask_bits, get_manifold)
+	return daabbcc3d.raycast_sort(aabb_group_id, ray_start, ray_end, mask_bits, get_manifold, is_mask)
 end
 
 function collision.update_aabb(aabb)

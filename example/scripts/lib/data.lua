@@ -131,7 +131,7 @@ function data.highlight(result, count)
 	local box = {}
 
 	for i = 1, count do
-		if manager.is_sort or manager.is_manifold then
+		if manager.is_sort or manager.is_manifold or manager.is_mask then
 			result_aabb_id = result[i].id
 		else
 			result_aabb_id = result[i]

@@ -29,9 +29,9 @@ function update(self, dt)
 	collision.update_aabb(data.boxes[5])
 
 	if manager.is_sort then
-		query_result, query_result_count = collision.query_aabb_sort(manager.world_position, 2, 2, 2, manager.is_mask, manager.is_manifold)
+		query_result, query_result_count = collision.query_aabb_sort(manager.world_position, 2, 2, 2, manager.is_mask, manager.is_manifold, manager.is_mask)
 	else
-		query_result, query_result_count = collision.query_aabb(manager.world_position, 2, 2, 2, manager.is_mask, manager.is_manifold)
+		query_result, query_result_count = collision.query_aabb(manager.world_position, 2, 2, 2, manager.is_mask, manager.is_manifold, manager.is_mask)
 	end
 
 	if query_result then
