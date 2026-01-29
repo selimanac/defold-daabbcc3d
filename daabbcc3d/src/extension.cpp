@@ -73,12 +73,15 @@ static inline void SortResult(lua_State* L, uint32_t queryResultSize, dmArray<da
 
     for (int i = 0; i < queryResultSize; i++)
     {
-        lua_createtable(L, 2, 0);
+        lua_createtable(L, 3, 0);
         lua_pushstring(L, "id");
         lua_pushinteger(L, queryResult[i].m_proxyID);
         lua_settable(L, -3);
         lua_pushstring(L, "distance");
         lua_pushnumber(L, queryResult[i].m_distance);
+        lua_settable(L, -3);
+        lua_pushstring(L, "category_bits");
+        lua_pushinteger(L, queryResult[i].m_categoryBits);
         lua_settable(L, -3);
 
         lua_rawseti(L, newTable, i + 1);
@@ -95,12 +98,15 @@ static inline void ManifoldResult(lua_State* L, uint32_t queryResultSize, dmArra
 
     for (int i = 0; i < queryResultSize; i++)
     {
-        lua_createtable(L, 2, 0);
+        lua_createtable(L, 6, 0);
         lua_pushstring(L, "id");
         lua_pushinteger(L, queryResult[i].m_proxyID);
         lua_settable(L, -3);
         lua_pushstring(L, "distance");
         lua_pushnumber(L, queryResult[i].m_distance);
+        lua_settable(L, -3);
+        lua_pushstring(L, "category_bits");
+        lua_pushinteger(L, queryResult[i].m_categoryBits);
         lua_settable(L, -3);
         lua_pushstring(L, "depth");
         lua_pushnumber(L, queryResult[i].m_manifold.depth);

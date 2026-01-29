@@ -189,6 +189,7 @@ namespace daabbcc3d
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
                     b2Distance(m_queryContainer->m_center, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
+                    b2DynamicTree_GetCategoryBits(&m_daabbcc.m_treeGroup->m_dynamicTree, proxyID),
                     m_daabbcc.m_manifold
                 };
 
@@ -220,7 +221,8 @@ namespace daabbcc3d
             {
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
-                    b2Distance(m_queryContainer->m_center, b2AABB_Center(m_daabbcc.m_manifoldAABB))
+                    b2Distance(m_queryContainer->m_center, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
+                    b2DynamicTree_GetCategoryBits(&m_daabbcc.m_treeGroup->m_dynamicTree, proxyID)
                 };
             }
             else
@@ -230,6 +232,7 @@ namespace daabbcc3d
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
                     b2Distance(m_queryContainer->m_center, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
+                    b2DynamicTree_GetCategoryBits(&m_daabbcc.m_treeGroup->m_dynamicTree, proxyID),
                     m_daabbcc.m_manifold
                 };
             }
@@ -358,6 +361,7 @@ namespace daabbcc3d
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
                     input->distance, // b2Distance(input->origin, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
+                    b2DynamicTree_GetCategoryBits(&m_daabbcc.m_treeGroup->m_dynamicTree, proxyID),
                     m_daabbcc.m_manifold
                 };
 
@@ -384,7 +388,8 @@ namespace daabbcc3d
 
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
-                    input->distance
+                    input->distance,
+                    b2DynamicTree_GetCategoryBits(&m_daabbcc.m_treeGroup->m_dynamicTree, proxyID)
                     // b2Distance(input->origin, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
                 };
 
@@ -410,6 +415,7 @@ namespace daabbcc3d
                 m_daabbcc.m_manifoldResult = {
                     proxyID,
                     input->distance,
+                    b2DynamicTree_GetCategoryBits(&m_daabbcc.m_treeGroup->m_dynamicTree, proxyID),
                     // b2Distance(input->origin, b2AABB_Center(m_daabbcc.m_manifoldAABB)),
                     m_daabbcc.m_manifold
                 };
