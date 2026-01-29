@@ -71,18 +71,20 @@ function daabbcc3d.remove(group_id, aabb_id) end
 ---@param depth integer depth of AABB.
 ---@param mask_bits? integer  Default is **all**
 ---@param get_manifold? boolean  Get collision manifold. Default is **false**
----@return table Table of possible overlapping AABB IDs.
+---@param get_bits? boolean  Get category bits without manifold generation. Default is **false**
+---@return table Table of possible overlapping AABB IDs. When `get_bits=true`, returns table with `id` and `category_bits` fields.
 ---@return integer Count of `result` table.
-function daabbcc3d.query_aabb(group_id, position, width, height, depth, mask_bits, get_manifold) end
+function daabbcc3d.query_aabb(group_id, position, width, height, depth, mask_bits, get_manifold, get_bits) end
 
 ---Query the possible overlaps using AABB ID.
 ---@param group_id integer Group ID
 ---@param aabb_id integer AABB ID.
 ---@param mask_bits? integer Default is **all**
 ---@param get_manifold? boolean  Get collision manifold. Default is **false**
----@return table Table of possible overlapping AABB IDs.
+---@param get_bits? boolean  Get category bits without manifold generation. Default is **false**
+---@return table Table of possible overlapping AABB IDs. When `get_bits=true`, returns table with `id` and `category_bits` fields.
 ---@return integer Count of `result` table.
-function daabbcc3d.query_id(group_id, aabb_id, mask_bits, get_manifold) end
+function daabbcc3d.query_id(group_id, aabb_id, mask_bits, get_manifold, get_bits) end
 
 ---Query possible overlaps using a raw AABB.
 ---@param group_id integer Group ID
@@ -92,18 +94,20 @@ function daabbcc3d.query_id(group_id, aabb_id, mask_bits, get_manifold) end
 ---@param depth integer depth of AABB.
 ---@param mask_bits? integer Default is **all**
 ---@param get_manifold? boolean  Get collision manifold. Default is **false**
----@return table Table of possible overlapping AABBs. The `result` table contains aabb_ids and distances.
+---@param get_bits? boolean  Get category bits without manifold generation. Default is **false**
+---@return table Table of possible overlapping AABBs. The `result` table contains aabb_ids and distances. When `get_bits=true`, also includes `category_bits` field. When `get_manifold=true`, includes full manifold data with `category_bits`.
 ---@return integer Count of `result` table.
-function daabbcc3d.query_aabb_sort(group_id, position, width, height, depth, mask_bits, get_manifold) end
+function daabbcc3d.query_aabb_sort(group_id, position, width, height, depth, mask_bits, get_manifold, get_bits) end
 
 ---Query the possible overlaps using AABB ID. Returns a Table with IDs and distances, ordered from closest to farthest.
 ---@param group_id integer Group ID
 ---@param aabb_id integer AABB ID.
 ---@param mask_bits? integer Default is **all**
 ---@param get_manifold? boolean  Get collision manifold. Default is **false**
----@return table Table of possible overlapping AABBs. The `result` table contains aabb_ids and distances.
+---@param get_bits? boolean  Get category bits without manifold generation. Default is **false**
+---@return table Table of possible overlapping AABBs. The `result` table contains aabb_ids and distances. When `get_bits=true`, also includes `category_bits` field. When `get_manifold=true`, includes full manifold data with `category_bits`.
 ---@return integer Count of `result` table.
-function daabbcc3d.query_id_sort(group_id, aabb_id, mask_bits, get_manifold) end
+function daabbcc3d.query_id_sort(group_id, aabb_id, mask_bits, get_manifold, get_bits) end
 
 ---Perform ray casts against the group.
 ---@param group_id integer Group ID
@@ -111,9 +115,10 @@ function daabbcc3d.query_id_sort(group_id, aabb_id, mask_bits, get_manifold) end
 ---@param end_position vector3  Ray end position.
 ---@param mask_bits? integer Default is **all**
 ---@param get_manifold? boolean  Get collision manifold. Default is **false**
----@return table Table of possible overlapping AABB IDs.
+---@param get_bits? boolean  Get category bits without manifold generation. Default is **false**
+---@return table Table of possible overlapping AABB IDs. When `get_bits=true`, returns table with `id` and `category_bits` fields.
 ---@return integer Count of `result` table.
-function daabbcc3d.raycast(group_id, start_position, end_position, mask_bits, get_manifold) end
+function daabbcc3d.raycast(group_id, start_position, end_position, mask_bits, get_manifold, get_bits) end
 
 ---Perform ray casts against the group. Returns a Table with AABB IDs and distances, ordered from closest to farthest.
 ---@param group_id integer Group ID
@@ -121,9 +126,10 @@ function daabbcc3d.raycast(group_id, start_position, end_position, mask_bits, ge
 ---@param end_position vector3  Ray end position.
 ---@param mask_bits? integer  Default is **all**
 ---@param get_manifold? boolean  Get collision manifold. Default is **false**
----@return table Table of possible overlapping AABBs. The `result` table contains aabb_ids and distances.
+---@param get_bits? boolean  Get category bits without manifold generation. Default is **false**
+---@return table Table of possible overlapping AABBs. The `result` table contains aabb_ids and distances. When `get_bits=true`, also includes `category_bits` field. When `get_manifold=true`, includes full manifold data with `category_bits`.
 ---@return integer Count of `result` table.
-function daabbcc3d.raycast_sort(group_id, start_position, end_position, mask_bits, get_manifold) end
+function daabbcc3d.raycast_sort(group_id, start_position, end_position, mask_bits, get_manifold, get_bits) end
 
 ---Pause or resume the internal game object position update iteration. This is enabled by default but will not iterate if no game objects are registered. Pausing the iteration can free up compute power (e.g., when the game is paused).
 ---@param state boolean Pause or resume
