@@ -18,7 +18,7 @@ end
 
 function update(self, dt)
 	if manager.is_sort then
-		query_result, query_result_count = collision.raycast_sort(ray_start, manager.world_position, manager.is_mask, manager.is_manifold)
+		query_result, query_result_count = collision.raycast_sort(ray_start, manager.world_position, manager.is_mask, manager.is_manifold, manager.is_mask)
 	else
 		query_result, query_result_count = collision.raycast(ray_start, manager.world_position, manager.is_mask, manager.is_manifold, manager.is_mask)
 	end
