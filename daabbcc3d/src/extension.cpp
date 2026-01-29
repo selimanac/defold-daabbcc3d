@@ -73,12 +73,37 @@ static inline void SortResult(lua_State* L, uint32_t queryResultSize, dmArray<da
 
     for (int i = 0; i < queryResultSize; i++)
     {
-        lua_createtable(L, 2, 0);
+        lua_createtable(L, 0, 3);
         lua_pushstring(L, "id");
         lua_pushinteger(L, queryResult[i].m_proxyID);
         lua_settable(L, -3);
         lua_pushstring(L, "distance");
         lua_pushnumber(L, queryResult[i].m_distance);
+        lua_settable(L, -3);
+        lua_pushstring(L, "category_bits");
+        lua_pushinteger(L, queryResult[i].m_categoryBits);
+        lua_settable(L, -3);
+
+        lua_rawseti(L, newTable, i + 1);
+    }
+
+    lua_pushinteger(L, queryResultSize);
+}
+
+static inline void BitsResult(lua_State* L, uint32_t queryResultSize, dmArray<daabbcc3d::ManifoldResult>& queryResult)
+{
+    lua_createtable(L, queryResultSize, 0);
+
+    int newTable = lua_gettop(L);
+
+    for (int i = 0; i < queryResultSize; i++)
+    {
+        lua_createtable(L, 0, 2);
+        lua_pushstring(L, "id");
+        lua_pushinteger(L, queryResult[i].m_proxyID);
+        lua_settable(L, -3);
+        lua_pushstring(L, "category_bits");
+        lua_pushinteger(L, queryResult[i].m_categoryBits);
         lua_settable(L, -3);
 
         lua_rawseti(L, newTable, i + 1);
@@ -95,12 +120,15 @@ static inline void ManifoldResult(lua_State* L, uint32_t queryResultSize, dmArra
 
     for (int i = 0; i < queryResultSize; i++)
     {
-        lua_createtable(L, 2, 0);
+        lua_createtable(L, 0, 6);
         lua_pushstring(L, "id");
         lua_pushinteger(L, queryResult[i].m_proxyID);
         lua_settable(L, -3);
         lua_pushstring(L, "distance");
         lua_pushnumber(L, queryResult[i].m_distance);
+        lua_settable(L, -3);
+        lua_pushstring(L, "category_bits");
+        lua_pushinteger(L, queryResult[i].m_categoryBits);
         lua_settable(L, -3);
         lua_pushstring(L, "depth");
         lua_pushnumber(L, queryResult[i].m_manifold.depth);
@@ -136,6 +164,7 @@ static inline int QueryIDSort(lua_State* L)
     int32_t  proxyID = luaL_checkint(L, 2);
     uint64_t maskBits = B2_DEFAULT_MASK_BITS;
     bool     isManifold = false;
+    bool     getBits = false;
 
     if (lua_isnumber(L, 3))
     {
@@ -147,7 +176,12 @@ static inline int QueryIDSort(lua_State* L)
         isManifold = lua_toboolean(L, 4);
     }
 
-    daabbcc3d::QueryIDSort(proxyID, maskBits, isManifold);
+    if (lua_isboolean(L, 5))
+    {
+        getBits = lua_toboolean(L, 5);
+    }
+
+    daabbcc3d::QueryIDSort(proxyID, maskBits, isManifold || getBits);
 
     // Return Result
     uint32_t queryResultSize = 0;
@@ -157,13 +191,17 @@ static inline int QueryIDSort(lua_State* L)
     if (queryResultSize > 0)
     {
         dmArray<daabbcc3d::ManifoldResult>& queryResult = daabbcc3d::GetQueryManifoldResults();
-        if (!isManifold)
+        if (isManifold)
         {
-            SortResult(L, queryResultSize, queryResult);
+            ManifoldResult(L, queryResultSize, queryResult);
+        }
+        else if (getBits)
+        {
+            BitsResult(L, queryResultSize, queryResult);
         }
         else
         {
-            ManifoldResult(L, queryResultSize, queryResult);
+            SortResult(L, queryResultSize, queryResult);
         }
     }
     else
@@ -192,6 +230,7 @@ static int QueryAABBSort(lua_State* L)
     float             depth = luaL_checknumber(L, 5);
     uint64_t          maskBits = B2_DEFAULT_MASK_BITS;
     bool              isManifold = false;
+    bool              getBits = false;
 
     if (lua_isnumber(L, 6))
     {
@@ -203,7 +242,12 @@ static int QueryAABBSort(lua_State* L)
         isManifold = lua_toboolean(L, 7);
     }
 
-    daabbcc3d::QueryAABBSort(position->getX(), position->getY(), position->getZ(), width, height, depth, maskBits, isManifold);
+    if (lua_isboolean(L, 8))
+    {
+        getBits = lua_toboolean(L, 8);
+    }
+
+    daabbcc3d::QueryAABBSort(position->getX(), position->getY(), position->getZ(), width, height, depth, maskBits, isManifold || getBits);
 
     // Return Result
 
@@ -215,13 +259,17 @@ static int QueryAABBSort(lua_State* L)
     {
         dmArray<daabbcc3d::ManifoldResult>& queryResult = daabbcc3d::GetQueryManifoldResults();
 
-        if (!isManifold)
+        if (isManifold)
         {
-            SortResult(L, queryResultSize, queryResult);
+            ManifoldResult(L, queryResultSize, queryResult);
+        }
+        else if (getBits)
+        {
+            BitsResult(L, queryResultSize, queryResult);
         }
         else
         {
-            ManifoldResult(L, queryResultSize, queryResult);
+            SortResult(L, queryResultSize, queryResult);
         }
     }
     else
@@ -250,6 +298,7 @@ static int QueryAABB(lua_State* L)
     float             depth = luaL_checknumber(L, 5);
     uint64_t          maskBits = B2_DEFAULT_MASK_BITS;
     bool              isManifold = false;
+    bool              getBits = false;
 
     if (lua_isnumber(L, 6))
     {
@@ -261,13 +310,18 @@ static int QueryAABB(lua_State* L)
         isManifold = lua_toboolean(L, 7);
     }
 
-    daabbcc3d::QueryAABB(position->getX(), position->getY(), position->getZ(), width, height, depth, maskBits, isManifold);
+    if (lua_isboolean(L, 8))
+    {
+        getBits = lua_toboolean(L, 8);
+    }
+
+    daabbcc3d::QueryAABB(position->getX(), position->getY(), position->getZ(), width, height, depth, maskBits, isManifold || getBits);
 
     // Return Result
 
     uint32_t queryResultSize = 0;
 
-    if (!isManifold)
+    if (!isManifold && !getBits)
     {
         queryResultSize = daabbcc3d::GetQueryResultSize();
     }
@@ -278,7 +332,7 @@ static int QueryAABB(lua_State* L)
 
     if (queryResultSize > 0)
     {
-        if (!isManifold)
+        if (!isManifold && !getBits)
         {
             dmArray<uint16_t>& queryResult = daabbcc3d::GetQueryResults();
             Result(L, queryResultSize, queryResult);
@@ -286,7 +340,14 @@ static int QueryAABB(lua_State* L)
         else
         {
             dmArray<daabbcc3d::ManifoldResult>& queryResult = daabbcc3d::GetQueryManifoldResults();
-            ManifoldResult(L, queryResultSize, queryResult);
+            if (isManifold)
+            {
+                ManifoldResult(L, queryResultSize, queryResult);
+            }
+            else
+            {
+                BitsResult(L, queryResultSize, queryResult);
+            }
         }
     }
     else
@@ -313,6 +374,7 @@ static int QueryID(lua_State* L)
     int32_t  proxyID = luaL_checkint(L, 2);
     uint64_t maskBits = B2_DEFAULT_MASK_BITS;
     bool     isManifold = false;
+    bool     getBits = false;
 
     if (lua_isnumber(L, 3))
     {
@@ -324,12 +386,17 @@ static int QueryID(lua_State* L)
         isManifold = lua_toboolean(L, 4);
     }
 
-    daabbcc3d::QueryID(proxyID, maskBits, isManifold);
+    if (lua_isboolean(L, 5))
+    {
+        getBits = lua_toboolean(L, 5);
+    }
+
+    daabbcc3d::QueryID(proxyID, maskBits, isManifold || getBits);
 
     // Return Result
     uint32_t queryResultSize = 0;
 
-    if (!isManifold)
+    if (!isManifold && !getBits)
     {
         queryResultSize = daabbcc3d::GetQueryResultSize();
     }
@@ -340,7 +407,7 @@ static int QueryID(lua_State* L)
 
     if (queryResultSize > 0)
     {
-        if (!isManifold)
+        if (!isManifold && !getBits)
         {
             dmArray<uint16_t>& queryResult = daabbcc3d::GetQueryResults();
             Result(L, queryResultSize, queryResult);
@@ -348,7 +415,14 @@ static int QueryID(lua_State* L)
         else
         {
             dmArray<daabbcc3d::ManifoldResult>& queryResult = daabbcc3d::GetQueryManifoldResults();
-            ManifoldResult(L, queryResultSize, queryResult);
+            if (isManifold)
+            {
+                ManifoldResult(L, queryResultSize, queryResult);
+            }
+            else
+            {
+                BitsResult(L, queryResultSize, queryResult);
+            }
         }
     }
     else
@@ -380,6 +454,7 @@ static int RayCast(lua_State* L)
     dmVMath::Vector3* end_position = dmScript::CheckVector3(L, 3);
     uint64_t          maskBits = B2_DEFAULT_MASK_BITS;
     bool              isManifold = false;
+    bool              getBits = false;
 
     if (lua_isnumber(L, 4))
     {
@@ -391,11 +466,16 @@ static int RayCast(lua_State* L)
         isManifold = lua_toboolean(L, 5);
     }
 
-    daabbcc3d::RayCast(start_position->getX(), start_position->getY(), start_position->getZ(), end_position->getX(), end_position->getY(), end_position->getZ(), maskBits, isManifold);
+    if (lua_isboolean(L, 6))
+    {
+        getBits = lua_toboolean(L, 6);
+    }
+
+    daabbcc3d::RayCast(start_position->getX(), start_position->getY(), start_position->getZ(), end_position->getX(), end_position->getY(), end_position->getZ(), maskBits, isManifold || getBits);
 
     uint32_t queryResultSize = 0;
 
-    if (!isManifold)
+    if (!isManifold && !getBits)
     {
         queryResultSize = daabbcc3d::GetQueryResultSize();
     }
@@ -406,7 +486,7 @@ static int RayCast(lua_State* L)
 
     if (queryResultSize > 0)
     {
-        if (!isManifold)
+        if (!isManifold && !getBits)
         {
             dmArray<uint16_t>& queryResult = daabbcc3d::GetQueryResults();
             Result(L, queryResultSize, queryResult);
@@ -414,7 +494,14 @@ static int RayCast(lua_State* L)
         else
         {
             dmArray<daabbcc3d::ManifoldResult>& queryResult = daabbcc3d::GetQueryManifoldResults();
-            ManifoldResult(L, queryResultSize, queryResult);
+            if (isManifold)
+            {
+                ManifoldResult(L, queryResultSize, queryResult);
+            }
+            else
+            {
+                BitsResult(L, queryResultSize, queryResult);
+            }
         }
     }
     else
@@ -443,6 +530,7 @@ static int RayCastSort(lua_State* L)
 
     uint64_t          maskBits = B2_DEFAULT_MASK_BITS;
     bool              isManifold = false;
+    bool              getBits = false;
 
     if (lua_isnumber(L, 4))
     {
@@ -454,7 +542,12 @@ static int RayCastSort(lua_State* L)
         isManifold = lua_toboolean(L, 5);
     }
 
-    daabbcc3d::RayCastSort(start_position->getX(), start_position->getY(), start_position->getZ(), end_position->getX(), end_position->getY(), end_position->getZ(), maskBits, isManifold);
+    if (lua_isboolean(L, 6))
+    {
+        getBits = lua_toboolean(L, 6);
+    }
+
+    daabbcc3d::RayCastSort(start_position->getX(), start_position->getY(), start_position->getZ(), end_position->getX(), end_position->getY(), end_position->getZ(), maskBits, isManifold || getBits);
 
     uint32_t queryResultSize = 0;
 
@@ -463,13 +556,17 @@ static int RayCastSort(lua_State* L)
     if (queryResultSize > 0)
     {
         dmArray<daabbcc3d::ManifoldResult>& queryResult = daabbcc3d::GetQueryManifoldResults();
-        if (!isManifold)
+        if (isManifold)
         {
-            SortResult(L, queryResultSize, queryResult);
+            ManifoldResult(L, queryResultSize, queryResult);
+        }
+        else if (getBits)
+        {
+            BitsResult(L, queryResultSize, queryResult);
         }
         else
         {
-            ManifoldResult(L, queryResultSize, queryResult);
+            SortResult(L, queryResultSize, queryResult);
         }
     }
     else

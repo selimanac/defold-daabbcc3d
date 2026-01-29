@@ -69,7 +69,10 @@ function manager.init(title_txt)
 end
 
 function manager.input(action_id, action)
-	manager.world_position = camera.screen_to_world_plane(action.x, action.y, planeNormal, planePoint)
+	if action.screen_x then
+		manager.world_position = camera.screen_to_world_plane(action.screen_x, action.screen_y, planeNormal, planePoint)
+	end
+
 
 	if action_id == KEYS.AABB_DEFAULT and action.pressed then
 		toogle_default()
