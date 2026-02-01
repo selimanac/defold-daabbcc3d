@@ -22,9 +22,9 @@ function update(self, dt)
 	go.set_position(manager.world_position, aabb_box.id)
 
 	if manager.is_sort then
-		query_result, query_result_count = collision.query_id_sort(aabb_box.aabb_id, manager.is_mask, manager.is_manifold, manager.is_mask)
+		query_result, query_result_count = collision.query_id_sort(aabb_box.aabb_id, manager.is_mask, manager.is_manifold)
 	else
-		query_result, query_result_count = collision.query_id(aabb_box.aabb_id, manager.is_mask, manager.is_manifold, manager.is_mask)
+		query_result, query_result_count = collision.query_id(aabb_box.aabb_id, manager.is_mask, manager.is_manifold)
 	end
 
 	if query_result then
