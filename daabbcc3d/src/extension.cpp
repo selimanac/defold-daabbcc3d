@@ -845,15 +845,14 @@ static dmExtension::Result AppInitializeDAABBCC3D(dmExtension::AppParams* params
     dmLogInfo("AppInitializeDAABBCC3D");
 
     uint8_t  max_group_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc.max_group_count", 3);
-
     uint16_t max_gameobject_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc.max_gameobject_count", 128);
-
     uint16_t max_query_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc.max_query_result_count", 32);
-
     int32_t  updateFrequency = dmConfigFile::GetInt(params->m_ConfigFile, "display.update_frequency", 0);
+    float    m_MaxTimeStep = dmConfigFile::GetFloat(params->m_ConfigFile, "engine.max_time_step", 1.0f / 30);
 
     daabbcc3d::Setup(max_group_count, max_gameobject_count, max_query_count);
     daabbcc3d::SetUpdateFrequency(updateFrequency);
+    daabbcc3d::SetMaxTimeStep(m_MaxTimeStep);
 
     return dmExtension::RESULT_OK;
 }

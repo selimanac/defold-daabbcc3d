@@ -44,6 +44,7 @@ namespace daabbcc3d
     struct GameUpdate
     {
         uint8_t  m_updateFrequency = 0;
+        float    m_maxTimeStep;
         uint64_t m_previousFrameTime;
         float    m_accumFrameTime;
         bool     m_updateLoopState = true;
@@ -128,9 +129,7 @@ namespace daabbcc3d
     ////////////////////////////////////////
 
     uint8_t AddGroup(uint8_t treeBuildType);
-
     void    RemoveGroup(uint8_t groupID);
-
     bool    SetTreeGroup(uint8_t groupID); // THIS IS FOR INTERNAL USE ONLY
 
     ////////////////////////////////////////
@@ -138,13 +137,9 @@ namespace daabbcc3d
     ////////////////////////////////////////
 
     int32_t AddProxy(uint8_t groupID, float x, float y, float z, float width, float height, float depth, uint64_t categoryBits);
-
     void    AddGameObject(uint8_t groupID, int32_t proxyID, dmVMath::Point3 position, float width, float height, float depth, dmGameObject::HInstance gameObjectInstance, bool getWorldPosition);
-
     void    MoveProxy(int32_t proxyID, float x, float y, float z, float width, float height, float depth);
-
     void    UpdateGameobjectSize(uint8_t groupID, int32_t proxyID, float width, float height, float depth);
-
     void    RemoveProxy(uint8_t groupID, int32_t proxyID);
 
     ////////////////////////////////////////
@@ -152,20 +147,14 @@ namespace daabbcc3d
     ////////////////////////////////////////
 
     void QueryAABB(float x, float y, float z, float width, float height, float depth, uint64_t maskBits, bool isManifold);
-
     void QueryID(int32_t proxyID, uint64_t maskBits, bool isManifold);
-
     void QueryAABBSort(float x, float y, float z, float width, float height, float depth, uint64_t maskBits, bool isManifold);
-
     void QueryIDSort(int32_t proxyID, uint64_t maskBits, bool isManifold);
 
     // Query Results
     uint32_t                 GetQueryResultSize();
-
     uint32_t                 GetQueryManifoldResultSize();
-
     dmArray<uint16_t>&       GetQueryResults();
-
     dmArray<ManifoldResult>& GetQueryManifoldResults();
 
     ////////////////////////////////////////
@@ -173,7 +162,6 @@ namespace daabbcc3d
     ////////////////////////////////////////
 
     void RayCast(float start_x, float start_y, float start_z, float end_x, float end_y, float end_z, uint64_t maskBits, bool isManifold);
-
     void RayCastSort(float start_x, float start_y, float start_z, float end_x, float end_y, float end_z, uint64_t maskBits, bool isManifold);
 
     ////////////////////////////////////////
@@ -181,9 +169,8 @@ namespace daabbcc3d
     ////////////////////////////////////////
 
     void Run(bool toggle);
-
     void SetUpdateFrequency(int32_t updateFrequency);
-
+    void SetMaxTimeStep(float max_time_step);
     void GameObjectUpdate();
 
     ////////////////////////////////////////
@@ -191,7 +178,6 @@ namespace daabbcc3d
     ////////////////////////////////////////
 
     void Rebuild(uint8_t groupID, bool fullBuild);
-
     void RebuildAll(bool fullBuild);
 
     ////////////////////////////////////////
@@ -203,22 +189,16 @@ namespace daabbcc3d
     }
 
     static void        AABBtoAABBManifold(b2AABB A, b2AABB B, b2Manifold* m);
-
     static inline void Bound(b2AABB* aabb, float x, float y, float z, float width, float height, float depth);
-
     static void        CalcTimeStep(float& step_dt, uint32_t& num_steps);
-
     void               Reset();
-
     void               ErrorAssert(const char* info, uint8_t groupID);
-
     void               LimitErrorAssert(const char* info, uint16_t count);
 
     ////////////////////////////////////////
     // Tests
     ////////////////////////////////////////
     void DumpQueryResult(char* title);
-
     void DumpManifoldResult(char* title);
 
 } // namespace daabbcc3d

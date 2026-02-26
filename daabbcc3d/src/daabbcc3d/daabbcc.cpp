@@ -475,6 +475,11 @@ namespace daabbcc3d
         m_gameUpdate.m_updateFrequency = updateFrequency;
     };
 
+    void SetMaxTimeStep(float max_time_step)
+    {
+        m_gameUpdate.m_maxTimeStep = max_time_step;
+    };
+
     static inline void GameobjectRebuildIterateCallback(void*, const uint8_t* key, DAABBCC::TreeGroup* treeGroup)
     {
         if (treeGroup->m_buildType == UPDATE_INCREMENTAL)
@@ -673,9 +678,9 @@ namespace daabbcc3d
         float frame_dt = (float)(frame_time / 1000000.0);
 
         // Never allow for large hitches
-        if (frame_dt > 0.5f)
+        if (frame_dt > m_gameUpdate.m_maxTimeStep)
         {
-            frame_dt = 0.5f;
+            frame_dt = m_gameUpdate.m_maxTimeStep;
         }
 
         // Variable frame rate
