@@ -519,12 +519,13 @@ namespace daabbcc3d
             for (int i = 0; i < m_daabbcc.m_gameObjectContainer.Size(); ++i)
             {
                 m_daabbcc.m_gameObject = &m_daabbcc.m_gameObjectContainer[i];
+                DAABBCC::TreeGroup* m_treeGroup = m_daabbcc.m_dynamicTreeGroup.Get(m_daabbcc.m_gameObject->m_groupID);
 
                 if (m_gameUpdate.m_validateGameobjects)
                 {
                     if (dmGameObject::GetInstanceFromIdentifier(m_daabbcc.m_gameObject->m_collection, m_daabbcc.m_gameObject->m_identifier) == nullptr)
                     {
-                        dmLogError("Game object was deleted without calling daabbcc3d.remove(). Group ID: %u - AABB ID: %u. Auto-removing.", m_daabbcc.m_gameObject->m_groupID, m_daabbcc.m_gameObject->m_proxyID);
+                        dmLogError("Game object was deleted without calling daabbcc3d.remove(). Group ID: %u - AABB ID: %u - Bit: %llu. Auto-removing.", m_daabbcc.m_gameObject->m_groupID, m_daabbcc.m_gameObject->m_proxyID, b2DynamicTree_GetCategoryBits(&m_treeGroup->m_dynamicTree, m_daabbcc.m_gameObject->m_proxyID));
                         DAABBCC::TreeGroup* treeGroup = m_daabbcc.m_dynamicTreeGroup.Get(m_daabbcc.m_gameObject->m_groupID);
                         b2DynamicTree_DestroyProxy(&treeGroup->m_dynamicTree, m_daabbcc.m_gameObject->m_proxyID);
                         m_daabbcc.m_gameObjectContainer.EraseSwap(i);
@@ -546,8 +547,7 @@ namespace daabbcc3d
                 // B2_ASSERT(aabb.upperBound.y - aabb.lowerBound.y < B2_HUGE);
 
                 // TODO Find a better way:
-                b2AABB              m_aabb;
-                DAABBCC::TreeGroup* m_treeGroup = m_daabbcc.m_dynamicTreeGroup.Get(m_daabbcc.m_gameObject->m_groupID);
+                b2AABB m_aabb;
 
                 Bound(&m_aabb, m_daabbcc.m_gameObject->m_position.getX(), m_daabbcc.m_gameObject->m_position.getY(), m_daabbcc.m_gameObject->m_position.getZ(), m_daabbcc.m_gameObject->m_width, m_daabbcc.m_gameObject->m_height, m_daabbcc.m_gameObject->m_depth);
 
