@@ -525,7 +525,7 @@ namespace daabbcc3d
                 {
                     if (dmGameObject::GetInstanceFromIdentifier(m_daabbcc.m_gameObject->m_collection, m_daabbcc.m_gameObject->m_identifier) == nullptr)
                     {
-                        dmLogError("Game object was deleted without calling daabbcc3d.remove(). Group ID: %u - AABB ID: %u - Bit: %llu. Auto-removing.", m_daabbcc.m_gameObject->m_groupID, m_daabbcc.m_gameObject->m_proxyID, b2DynamicTree_GetCategoryBits(&m_treeGroup->m_dynamicTree, m_daabbcc.m_gameObject->m_proxyID));
+                        dmLogError("Game object was deleted without calling daabbcc3d.remove(). Group ID: %u - AABB ID: %u. Auto-removing.", m_daabbcc.m_gameObject->m_groupID, m_daabbcc.m_gameObject->m_proxyID);
                         DAABBCC::TreeGroup* treeGroup = m_daabbcc.m_dynamicTreeGroup.Get(m_daabbcc.m_gameObject->m_groupID);
                         b2DynamicTree_DestroyProxy(&treeGroup->m_dynamicTree, m_daabbcc.m_gameObject->m_proxyID);
                         m_daabbcc.m_gameObjectContainer.EraseSwap(i);
