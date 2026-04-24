@@ -16,12 +16,12 @@ function init(self)
 	data.add_box(vmath.vector3(-3, -3, 0), data.BOX_TYPE.GROUND, false, true)
 
 	aabb_box = data.boxes[1]
-
-
+	--[[
+	-- You may test the valide gameobject. It must be set to 1(true)
 	timer.delay(2, false, function()
 		go.delete(data.boxes[4].id)
 		data.boxes[4] = nil
-	end)
+	end)]]
 end
 
 function update(self, dt)
