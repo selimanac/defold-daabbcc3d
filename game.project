@@ -22,6 +22,3 @@ max_gameobject_count = 10
 max_query_result_count = 10
 validate_gameobjects = 1
 
-[native_extension]
-app_manifest = /test.appmanifest
-
