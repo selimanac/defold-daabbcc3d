@@ -16,10 +16,11 @@ dependencies#0 = https://github.com/selimanac/defold-random/archive/refs/heads/m
 [library]
 include_dirs = daabbcc3d
 
-[daabbcc]
+[daabbcc3d]
 max_group_count = 1
 max_gameobject_count = 10
 max_query_result_count = 10
+validate_gameobjects = 1
 
 [native_extension]
 app_manifest = /test.appmanifest

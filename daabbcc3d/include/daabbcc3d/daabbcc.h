@@ -49,18 +49,21 @@ namespace daabbcc3d
         float    m_accumFrameTime;
         bool     m_updateLoopState = true;
         uint32_t m_loopCounter;
+        bool     m_validateGameobjects = false;
     };
 
     typedef struct GameObject
     {
-        uint8_t                 m_groupID;
-        int32_t                 m_proxyID;
-        dmVMath::Point3         m_position;
-        dmGameObject::HInstance m_gameObjectInstance;
-        float                   m_width;
-        float                   m_height;
-        float                   m_depth;
-        bool                    m_getWorldPosition = false;
+        uint8_t                   m_groupID;
+        int32_t                   m_proxyID;
+        dmVMath::Point3           m_position;
+        dmGameObject::HInstance   m_gameObjectInstance;
+        dmGameObject::HCollection m_collection;
+        dmhash_t                  m_identifier;
+        float                     m_width;
+        float                     m_height;
+        float                     m_depth;
+        bool                      m_getWorldPosition = false;
     } GameObject;
 
     typedef struct Ray
@@ -137,7 +140,7 @@ namespace daabbcc3d
     ////////////////////////////////////////
 
     int32_t AddProxy(uint8_t groupID, float x, float y, float z, float width, float height, float depth, uint64_t categoryBits);
-    void    AddGameObject(uint8_t groupID, int32_t proxyID, dmVMath::Point3 position, float width, float height, float depth, dmGameObject::HInstance gameObjectInstance, bool getWorldPosition);
+    void    AddGameObject(uint8_t groupID, int32_t proxyID, dmVMath::Point3 position, float width, float height, float depth, dmGameObject::HInstance gameObjectInstance, dmGameObject::HCollection collection, dmhash_t identifier, bool getWorldPosition);
     void    MoveProxy(int32_t proxyID, float x, float y, float z, float width, float height, float depth);
     void    UpdateGameobjectSize(uint8_t groupID, int32_t proxyID, float width, float height, float depth);
     void    RemoveProxy(uint8_t groupID, int32_t proxyID);
@@ -171,6 +174,7 @@ namespace daabbcc3d
     void Run(bool toggle);
     void SetUpdateFrequency(int32_t updateFrequency);
     void SetMaxTimeStep(float max_time_step);
+    void SetValidateGameobjects(bool validate_gameobjects);
     void GameObjectUpdate();
 
     ////////////////////////////////////////

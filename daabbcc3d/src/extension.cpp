@@ -624,14 +624,16 @@ static int AddGameObject(lua_State* L)
         RETURN_INVALID_GROUP_ERROR("daabbcc.insert_gameobject()", groupID);
     }
 
-    dmGameObject::HInstance gameobjectInstance = dmScript::CheckGOInstance(L, 2);
+    dmGameObject::HInstance   gameobjectInstance = dmScript::CheckGOInstance(L, 2);
+    dmGameObject::HCollection collection = dmGameObject::GetCollection(gameobjectInstance);
+    dmhash_t                  identifier = dmGameObject::GetIdentifier(gameobjectInstance);
 
-    dmVMath::Point3         gameobjectPosition = dmGameObject::GetPosition(gameobjectInstance);
-    float                   width = luaL_checknumber(L, 3);
-    float                   height = luaL_checknumber(L, 4);
-    float                   depth = luaL_checknumber(L, 5);
-    uint64_t                categoryBits = B2_DEFAULT_CATEGORY_BITS;
-    bool                    getWorldPosition = false;
+    dmVMath::Point3           gameobjectPosition = dmGameObject::GetPosition(gameobjectInstance);
+    float                     width = luaL_checknumber(L, 3);
+    float                     height = luaL_checknumber(L, 4);
+    float                     depth = luaL_checknumber(L, 5);
+    uint64_t                  categoryBits = B2_DEFAULT_CATEGORY_BITS;
+    bool                      getWorldPosition = false;
 
     if (lua_isnumber(L, 6))
     {
@@ -650,7 +652,7 @@ static int AddGameObject(lua_State* L)
 
     int32_t proxyID = daabbcc3d::AddProxy(groupID, gameobjectPosition.getX(), gameobjectPosition.getY(), gameobjectPosition.getZ(), width, height, depth, categoryBits);
 
-    daabbcc3d::AddGameObject(groupID, proxyID, gameobjectPosition, width, height, depth, gameobjectInstance, getWorldPosition);
+    daabbcc3d::AddGameObject(groupID, proxyID, gameobjectPosition, width, height, depth, gameobjectInstance, collection, identifier, getWorldPosition);
 
     lua_pushinteger(L, proxyID);
 
@@ -844,15 +846,17 @@ static dmExtension::Result AppInitializeDAABBCC3D(dmExtension::AppParams* params
 {
     dmLogInfo("AppInitializeDAABBCC3D");
 
-    uint8_t  max_group_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc.max_group_count", 3);
-    uint16_t max_gameobject_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc.max_gameobject_count", 128);
-    uint16_t max_query_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc.max_query_result_count", 32);
+    uint8_t  max_group_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc3d.max_group_count", 3);
+    uint16_t max_gameobject_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc3d.max_gameobject_count", 128);
+    uint16_t max_query_count = dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc3d.max_query_result_count", 32);
     int32_t  updateFrequency = dmConfigFile::GetInt(params->m_ConfigFile, "display.update_frequency", 0);
     float    m_MaxTimeStep = dmConfigFile::GetFloat(params->m_ConfigFile, "engine.max_time_step", 1.0f / 30);
+    bool     validate_gameobjects = (bool)dmConfigFile::GetInt(params->m_ConfigFile, "daabbcc3d.validate_gameobjects", 0);
 
     daabbcc3d::Setup(max_group_count, max_gameobject_count, max_query_count);
     daabbcc3d::SetUpdateFrequency(updateFrequency);
     daabbcc3d::SetMaxTimeStep(m_MaxTimeStep);
+    daabbcc3d::SetValidateGameobjects(validate_gameobjects);
 
     return dmExtension::RESULT_OK;
 }

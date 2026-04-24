@@ -102,7 +102,7 @@ namespace daabbcc3d
         return proxyID;
     }
 
-    void AddGameObject(uint8_t groupID, int32_t proxyID, dmVMath::Point3 position, float width, float height, float depth, dmGameObject::HInstance gameObjectInstance, bool getWorldPosition)
+    void AddGameObject(uint8_t groupID, int32_t proxyID, dmVMath::Point3 position, float width, float height, float depth, dmGameObject::HInstance gameObjectInstance, dmGameObject::HCollection collection, dmhash_t identifier, bool getWorldPosition)
     {
         GameObject gameObject;
 
@@ -110,6 +110,8 @@ namespace daabbcc3d
         gameObject.m_proxyID = proxyID;
         gameObject.m_position = position;
         gameObject.m_gameObjectInstance = gameObjectInstance;
+        gameObject.m_collection = collection;
+        gameObject.m_identifier = identifier;
         gameObject.m_width = width;
         gameObject.m_height = height;
         gameObject.m_depth = depth;
@@ -480,6 +482,11 @@ namespace daabbcc3d
         m_gameUpdate.m_maxTimeStep = max_time_step;
     };
 
+    void SetValidateGameobjects(bool validate_gameobjects)
+    {
+        m_gameUpdate.m_validateGameobjects = validate_gameobjects;
+    };
+
     static inline void GameobjectRebuildIterateCallback(void*, const uint8_t* key, DAABBCC::TreeGroup* treeGroup)
     {
         if (treeGroup->m_buildType == UPDATE_INCREMENTAL)
@@ -512,6 +519,19 @@ namespace daabbcc3d
             for (int i = 0; i < m_daabbcc.m_gameObjectContainer.Size(); ++i)
             {
                 m_daabbcc.m_gameObject = &m_daabbcc.m_gameObjectContainer[i];
+
+                if (m_gameUpdate.m_validateGameobjects)
+                {
+                    if (dmGameObject::GetInstanceFromIdentifier(m_daabbcc.m_gameObject->m_collection, m_daabbcc.m_gameObject->m_identifier) == nullptr)
+                    {
+                        dmLogError("Game object was deleted without calling daabbcc3d.remove(). Group ID: %u - AABB ID: %u. Auto-removing.", m_daabbcc.m_gameObject->m_groupID, m_daabbcc.m_gameObject->m_proxyID);
+                        DAABBCC::TreeGroup* treeGroup = m_daabbcc.m_dynamicTreeGroup.Get(m_daabbcc.m_gameObject->m_groupID);
+                        b2DynamicTree_DestroyProxy(&treeGroup->m_dynamicTree, m_daabbcc.m_gameObject->m_proxyID);
+                        m_daabbcc.m_gameObjectContainer.EraseSwap(i);
+                        --i;
+                        continue;
+                    }
+                }
 
                 if (m_daabbcc.m_gameObject->m_getWorldPosition)
                 {
@@ -723,6 +743,8 @@ namespace daabbcc3d
         m_daabbcc.m_queryManifoldResult.SetSize(0);
 
         m_daabbcc.m_treeGroup = NULL;
+        m_daabbcc.m_groupID = 0;
+        m_daabbcc.m_currentGroupID = 0;
     }
 
     void ErrorAssert(const char* info, uint8_t groupID)
