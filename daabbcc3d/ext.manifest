@@ -1,7 +1,2 @@
 # C++ symbol in your extension
 name: "DAABBCC3D"
-
-platforms:
-    common:
-       context:
-           flags: ["-std=c++11"]
